@@ -8,10 +8,12 @@ class Enemy : public BaseObject {
 	int score = 1;
 public:
 	Enemy() = default;
-	Enemy(std::shared_ptr<Game> game, sf::Sprite sprite, const gm::Coord2D& pos);
+	Enemy(std::shared_ptr<Game> game, const std::string&animName, const gm::Coord& pos);
 	void update()override;
 	void draw(sf::RenderTarget& ren, sf::RenderStates states) const override;
 	void takeDamage(int dmg)override;
-	int getScore()const;
+	int getScore() const;
+	bool onDeleting() override;
+	virtual void dropBonus() const;
+	virtual ~Enemy() = default;
 };
-

@@ -1,24 +1,38 @@
 #pragma once
-#include "Vector2D.h"
+#include "Vector.h"
 #include "Rectangle.h"
 #include "SFML/Graphics/Sprite.hpp"
+#include "Parametr.h"
+#include "Animation.h"
 class Game;
+
+/*
+* Collision Layers
+* 0 - player and enemys
+* 1 - player's bullets and enemys
+* 2 - player and enemy's bullets
+*/
 
 class BaseObject : public sf::Drawable {
 public:
-	BaseObject() = default;
-	BaseObject(std::shared_ptr<Game> game, sf::Sprite sprite, const gm::Coord2D& pos);
+	std::bitset<8> collisionLayers;
 
+	BaseObject() = default;
+	BaseObject(std::shared_ptr<Game> game, const std::string& anim, const gm::Coord& pos);
+	BaseObject& operator=(BaseObject&& obj) = default;
+
+	mutable Animations anim;
 	std::shared_ptr<Game> game;
-	mutable sf::Sprite sprite;
-	int healf = 1;
+	Parametr<int> health{ 1, 0 };
 	gm::Rectangle hitbox;
-	gm::Vector2D normalOffset;
+	gm::Vector normalOffset;
 	bool toDelete = false;
 
+	virtual void init();
 	void draw(sf::RenderTarget& ren, sf::RenderStates states) const override;
 	virtual void update();
 	virtual void takeDamage(int damage);
-	virtual  ~BaseObject() = default;
+	bool collide(BaseObject* other);
+	virtual bool onDeleting();
+	virtual ~BaseObject() = default;
 };
-

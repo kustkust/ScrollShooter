@@ -24,7 +24,7 @@ Painter& Painter::setFontSize(uint32_t fonstSize_) {
 	return *this;
 }
 
-Painter& Painter::setOffset(const gm::Vector2D& offset_) {
+Painter& Painter::setOffset(const gm::Vector& offset_) {
 	offset = offset_;
 	return *this;
 }
@@ -45,61 +45,63 @@ uint32_t Painter::getFontSize() const {
 	return fontSize;
 }
 
-gm::Vector2D Painter::getOffset() const {
+gm::Vector Painter::getOffset() const {
 	return offset;
 }
 
 Painter& Painter::drawRectangle(const gm::Rectangle& rect) {
-	::drawRectangle(ren, rect, outlineColor, fillColor);
+	gm::Rectangle rect_ = rect;
+	rect_.move(offset);
+	::drawRectangle(ren, rect_, outlineColor, fillColor);
 	return *this;
 }
 
-Painter& Painter::drawRectangle(const gm::Coord2D& leftTop, const gm::Coord2D& rightDown) {
+Painter& Painter::drawRectangle(const gm::Coord& leftTop, const gm::Coord& rightDown) {
 	::drawRectangle(ren, leftTop + offset, rightDown + offset, outlineColor, fillColor);
 	return *this;
 }
 
-Painter& Painter::drawRectangleS(gm::Coord2D leftTop, gm::Vector2D size) {
+Painter& Painter::drawRectangleS(gm::Coord leftTop, gm::Vector size) {
 	::drawRectangleS(ren, leftTop + offset, size, outlineColor, fillColor);
 	return *this;
 }
 
-Painter& Painter::drawRectangleC(gm::Coord2D center, gm::Size2D size) {
+Painter& Painter::drawRectangleC(gm::Coord center, gm::Size size) {
 	::drawRectangleC(ren, center + offset, size, outlineColor, fillColor);
 	return *this;
 }
 
-Painter& Painter::drawSquare(gm::Coord2D leftTop, gm::lenght len) {
+Painter& Painter::drawSquare(gm::Coord leftTop, gm::lenght len) {
 	::drawSquare(ren, leftTop + offset, len, outlineColor, fillColor);
 	return *this;
 }
 
-Painter& Painter::drawSquareC(gm::Coord2D center, gm::lenght len) {
+Painter& Painter::drawSquareC(gm::Coord center, gm::lenght len) {
 	::drawSquareC(ren, center + offset, len, outlineColor, fillColor);
 	return *this;
 }
 
-Painter& Painter::writeText(const std::string& text, const gm::Coord2D& pos) {
+Painter& Painter::writeText(const std::string& text, const gm::Coord& pos) {
 	::writeText(ren, text, font, pos + offset, fontSize);
 	return *this;
 }
 
-Painter& Painter::writeTextC(const std::string& text, const gm::Coord2D& pos) {
+Painter& Painter::writeTextC(const std::string& text, const gm::Coord& pos) {
 	::writeTextC(ren, text, font, pos + offset, fontSize);
 	return *this;
 }
 
-Painter& Painter::writeTextRT(const std::string& text, const gm::Coord2D& pos) {
+Painter& Painter::writeTextRT(const std::string& text, const gm::Coord& pos) {
 	::writeTextRT(ren, text, font, pos + offset, fontSize);
 	return *this;
 }
 
-Painter& Painter::writeTextLB(const std::string& text, const gm::Coord2D& pos) {
+Painter& Painter::writeTextLB(const std::string& text, const gm::Coord& pos) {
 	::writeTextLB(ren, text, font, pos + offset, fontSize);
 	return *this;
 }
 
-Painter& Painter::writeTextRB(const std::string& text, const gm::Coord2D& pos) {
+Painter& Painter::writeTextRB(const std::string& text, const gm::Coord& pos) {
 	::writeTextRB(ren, text, font, pos + offset, fontSize);
 	return *this;
 }

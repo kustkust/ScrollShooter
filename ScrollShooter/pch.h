@@ -1,8 +1,16 @@
 #pragma once
+#include <ranges>
+#include <iostream>
 #include <chrono>
 #include <map>
+#include <list>
+#include <array>
+#include <iterator>
 #include <vector>
 #include <memory>
 #include <random>
 #include <string>
 #include <functional>
+#include <fstream>
+#include <bitset>
+#include <nlohmann/json.hpp>

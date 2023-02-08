@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "DrawBaseElement.h"
-#include "Line2D.h"
+#include "Line.h"
 #include "Utility.h"
+#include "Circle.h"
 #include "Rectangle.h"
-
 
 void drawArrow(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& p,
-	gm::Vector2D dir,
-	float len,
+	const gm::Coord& p,
+	gm::Vector dir,
+	double len,
 	const sf::Color color
 ) {
 	sf::VertexArray arr{ sf::PrimitiveType::LinesStrip };
@@ -22,8 +22,8 @@ void drawArrow(
 
 void drawLine(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& begin,
-	const gm::Coord2D& end,
+	const gm::Coord& begin,
+	const gm::Coord& end,
 	const sf::Color color
 ) {
 	sf::VertexArray arr{ sf::PrimitiveType::Lines };
@@ -34,7 +34,7 @@ void drawLine(
 
 void drawX(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& pos,
+	const gm::Coord& pos,
 	const double& size,
 	const sf::Color color
 ) {
@@ -45,10 +45,10 @@ void drawX(
 
 void drawDottedLine(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& begin,
-	const gm::Coord2D& end,
-	float segment,
-	float interval,
+	const gm::Coord& begin,
+	const gm::Coord& end,
+	double segment,
+	double interval,
 	const sf::Color& color
 ) {
 	sf::VertexArray arr{ sf::PrimitiveType::Lines };
@@ -73,24 +73,39 @@ void drawDottedLine(
 
 void drawCircle(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& o,
+	const gm::Coord& o,
 	double r,
-	const sf::Color& color
+	const sf::Color& outlineColor,
+	const sf::Color& fillColor
 ) {
-	sf::VertexArray arr{ sf::PrimitiveType::LinesStrip };
+	sf::CircleShape circ(r);
+	circ.setPosition(o);
+	circ.setFillColor(fillColor);
+	circ.setOutlineColor(outlineColor);
+	ren.draw(circ);
+	/*sf::VertexArray arr{sf::PrimitiveType::LinesStrip};
 	auto v = gm::VI.relen(r);
 	for (auto i = 0; i < 32; i++) {
 		arr.append({ o + v,color });
 		v <<= gm::PI2 / 32;
 	}
 	arr.append({ o + v,color });
-	ren.draw(arr);
+	ren.draw(arr);*/
+}
+
+void drawCircle(
+	sf::RenderTarget& ren, 
+	const gm::Circle& circ,
+	const sf::Color& outlineColor,
+	const sf::Color& fillColor
+) {
+	drawCircle(ren, circ.getCenter(), circ.radius, outlineColor, fillColor);
 }
 
 void drawDottedCircle(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& o,
-	float r,
+	const gm::Coord& o,
+	double r,
 	const sf::Color& color
 ) {
 	sf::VertexArray arr{ sf::PrimitiveType::Lines };
@@ -105,8 +120,8 @@ void drawDottedCircle(
 //угол от 0 до 2PI
 void drawCirclePart(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& center,
-	float r,
+	const gm::Coord& center,
+	double r,
 	gm::angle beg,
 	gm::angle end,
 	const sf::Color& color
@@ -127,8 +142,8 @@ void drawCirclePart(
 
 void drawDottedCirclePart(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& o,
-	float r,
+	const gm::Coord& o,
+	double r,
 	gm::angle beg,
 	gm::angle end,
 	const sf::Color& color
@@ -147,8 +162,8 @@ void writeText(
 	sf::RenderTarget& ren,
 	const sf::String& s,
 	const sf::Font& font,
-	const gm::Vector2D& pos,
-	size_t size
+	const gm::Vector& pos,
+	int size
 ) {
 	sf::Text t(s, font, size);
 	t.setPosition(pos.correct_coord(1.));
@@ -159,8 +174,8 @@ void writeTextC(
 	sf::RenderTarget& ren,
 	const sf::String& s,
 	const sf::Font& font,
-	const gm::Vector2D& pos,
-	size_t size
+	const gm::Vector& pos,
+	int size
 ) {
 	sf::Text t(s, font, size);
 	gm::Rectangle rect = t.getGlobalBounds();
@@ -168,21 +183,27 @@ void writeTextC(
 	ren.draw(t);
 }
 
-void writeTextRT(sf::RenderTarget& ren, const sf::String& s, const sf::Font& font, const gm::Vector2D& pos, size_t size) {
+void writeTextRT(
+	sf::RenderTarget& ren,
+	const sf::String& s,
+	const sf::Font& font,
+	const gm::Vector& pos,
+	int size
+) {
 	sf::Text t(s, font, size);
 	gm::Rectangle rect = t.getGlobalBounds();
 	t.setPosition(pos.addX(-rect.getSize().x).correct_coord(1));
 	ren.draw(t);
 }
 
-void writeTextLB(sf::RenderTarget& ren, const sf::String& s, const sf::Font& font, const gm::Vector2D& pos, size_t size) {
+void writeTextLB(sf::RenderTarget& ren, const sf::String& s, const sf::Font& font, const gm::Vector& pos, int size) {
 	sf::Text t(s, font, size);
 	gm::Rectangle rect = t.getGlobalBounds();
 	t.setPosition(pos.addY(-rect.getSize().y).correct_coord(1));
 	ren.draw(t);
 }
 
-void writeTextRB(sf::RenderTarget& ren, const sf::String& s, const sf::Font& font, const gm::Vector2D& pos, size_t size) {
+void writeTextRB(sf::RenderTarget& ren, const sf::String& s, const sf::Font& font, const gm::Vector& pos, int size) {
 	sf::Text t(s, font, size);
 	gm::Rectangle rect = t.getGlobalBounds();
 	t.setPosition(pos - rect.getSize().correct_coord(1));
@@ -193,8 +214,8 @@ void writeInt(
 	sf::RenderTarget& ren,
 	int num,
 	const sf::Font& font,
-	const gm::Vector2D& pos,
-	size_t size
+	const gm::Vector& pos,
+	int size
 ) {
 	writeText(ren, std::to_string(num), font, pos, size);
 }
@@ -203,17 +224,17 @@ void writeDouble(
 	sf::RenderTarget& ren,
 	double num,
 	const sf::Font& font,
-	const gm::Vector2D& pos,
-	size_t size
+	const gm::Vector& pos,
+	int size
 ) {
 	writeText(ren, std::to_string(num), font, pos, size);
 }
 
 void drawArrowLine(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& begin,
-	const gm::Coord2D& end,
-	float len,
+	const gm::Coord& begin,
+	const gm::Coord& end,
+	double len,
 	const sf::Color color
 ) {
 	drawArrow(ren, end, end - begin, len, color);
@@ -222,8 +243,8 @@ void drawArrowLine(
 
 void drawDottedArrowLine(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& begin,
-	const gm::Coord2D& end,
+	const gm::Coord& begin,
+	const gm::Coord& end,
 	double arrowLen,
 	double segment,
 	double interval,
@@ -233,14 +254,19 @@ void drawDottedArrowLine(
 	drawDottedLine(ren, begin, end, segment, interval, color);
 }
 
-void drawRectangle(sf::RenderTarget& ren, const gm::Rectangle& rect, const sf::Color& outlineColor, const sf::Color& fillColor) {
+void drawRectangle(
+	sf::RenderTarget& ren, 
+	const gm::Rectangle& rect, 
+	const sf::Color& outlineColor, 
+	const sf::Color& fillColor
+) {
 	drawRectangle(ren, rect.getLeftTop(), rect.getRightBottom(), outlineColor, fillColor);
 }
 
 void drawRectangle(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& leftTop,
-	const gm::Coord2D& rightDown,
+	const gm::Coord& leftTop,
+	const gm::Coord& rightDown,
 	const sf::Color& outlineColor,
 	const sf::Color& fillColor
 ) {
@@ -249,8 +275,8 @@ void drawRectangle(
 
 void drawRectangleS(
 	sf::RenderTarget& ren,
-	gm::Coord2D leftTop,
-	gm::Vector2D size,
+	gm::Coord leftTop,
+	gm::Vector size,
 	const sf::Color& outlineColor,
 	const sf::Color& fillColor
 ) {
@@ -271,8 +297,8 @@ void drawRectangleS(
 
 void drawRectangleC(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& center,
-	const gm::Vector2D& halfSize,
+	const gm::Coord& center,
+	const gm::Vector& halfSize,
 	const sf::Color& outlineColor,
 	const sf::Color& fillColor
 ) {
@@ -281,7 +307,7 @@ void drawRectangleC(
 
 void drawSquare(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& leftTop,
+	const gm::Coord& leftTop,
 	gm::lenght len,
 	const sf::Color& outlineColor,
 	const sf::Color& fillColor
@@ -291,7 +317,7 @@ void drawSquare(
 
 void drawSquareC(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& center,
+	const gm::Coord& center,
 	gm::lenght len,
 	const sf::Color& outlineColor,
 	const sf::Color& fillColor
@@ -306,7 +332,7 @@ void drawSquareC(
 
 void drawSpiral(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& center,
+	const gm::Coord& center,
 	const gm::lenght& radius,
 	const gm::lenght& radiusSpeed,
 	const gm::angle& startAngle,
@@ -321,7 +347,7 @@ void drawSpiral(
 	}
 	auto r = abs(radius);
 	auto rSpeed = radiusSpeed * abs((gm::PI2 / 64) / angleSpeed);
-	gm::Coord2D v = gm::VI.relen(r) << startAngle;
+	gm::Coord v = gm::VI.relen(r) << startAngle;
 	int accuracy = 64;
 	auto aSpeed = gm::PI / 32 * gm::sign(angleSpeed);
 	int count = std::min((int)round(abs(angleLen) / gm::PI2 * 64), 640);
@@ -340,8 +366,8 @@ void drawSpiral(
 
 void drawSinus(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& beg,
-	const gm::Coord2D& end,
+	const gm::Coord& beg,
+	const gm::Coord& end,
 	const gm::lenght& delta,
 	const gm::lenght& ampl,
 	const gm::lenght& amplSpead,
@@ -354,10 +380,10 @@ void drawSinus(
 	if (isDotted) {
 		sinus.setPrimitiveType(sf::PrimitiveType::Lines);
 	}
-	gm::Line2D l(beg, end);
+	gm::Line l(beg, end);
 	gm::angle ang = gm::VI ^ (end - beg);
-	gm::Coord2D p =
-		(gm::Coord2D(0., ampl * sin(-delta / period * gm::PI2)) << ang) +
+	gm::Coord p =
+		(gm::Coord(0., ampl * sin(-delta / period * gm::PI2)) << ang) +
 		beg;
 	int t = 0;
 	sinus.append(sf::Vertex(p, sf::Color::White));
@@ -365,8 +391,8 @@ void drawSinus(
 		double k = gm::PI2 / (period + periodSpead * t);
 		double nowAmp = ampl + amplSpead * t;
 		gm::lenght nowLen = beg / l.projection(p) - delta;
-		gm::Vector2D n(-k * nowAmp * cos(nowLen * k), 1.);
-		gm::Vector2D speedV = n.relen(0.1) >> gm::PI_1_2;
+		gm::Vector n(-k * nowAmp * cos(nowLen * k), 1.);
+		gm::Vector speedV = n.relen(0.1) >> gm::PI_1_2;
 		speedV <<= ang;
 		p += speedV * step;
 		sinus.append(sf::Vertex(p, sf::Color::White));
@@ -377,10 +403,10 @@ void drawSinus(
 
 void drawCurve4(
 	sf::RenderTarget& ren,
-	const gm::Coord2D& p0,
-	const gm::Coord2D& p1,
-	const gm::Coord2D& p2,
-	const gm::Coord2D& p3,
+	const gm::Coord& p0,
+	const gm::Coord& p1,
+	const gm::Coord& p2,
+	const gm::Coord& p3,
 	const sf::Color& color,
 	const bool& isDotted
 ) {

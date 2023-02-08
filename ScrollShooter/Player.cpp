@@ -2,20 +2,42 @@
 #include "Player.h"
 #include "Game.h"
 #include "Bulet.h"
+#include "DataStorage.h"
+#include "DrawBaseElement.h"
 
-Player::Player(std::shared_ptr<Game> game, sf::Sprite sprite, const gm::Coord2D& pos) : BaseObject(game, sprite, pos), shootTimer() {
-	healf = 5;
+Player::Player(std::shared_ptr<Game> game, const std::string& animName, const gm::Coord& pos) :
+	BaseObject(game, animName, pos), shootTimer(),
+	shootSound(SoundStorage["shoot"]), shieldAnimation(AnimationStorage["Shield"]) {
+	collisionLayers[0] = 1;
+	collisionLayers[2] = 1;
+}
+
+void Player::init() {
+	BaseObject::init();
+	health.reset(maxHealth);
+	shootDuration.reset();
+	speed.reset();
+	shooting = false;
+	firstShoot = false;
+	dmg.reset();
+	inictableDuration = 500ms;
+	show = true;
+	score = 0;
+	normalOffset = gm::NV;
+	anim.start();
+	shieldAnimation.setOrigin({ shieldAnimation.getWidth() / 2, shieldAnimation.getHeight() });
+	shieldHitbox.setSize({ 64., 64. });
 }
 
 void Player::control(const sf::Event& e) {
 	switch (e.type) {
 	case sf::Event::KeyPressed:
 		switch (e.key.code) {
-		case sf::Keyboard::Up:normalOffset.y = -speed; break;
-		case sf::Keyboard::Down:normalOffset.y = speed; break;
-		case sf::Keyboard::Left:normalOffset.x = -speed; break;
-		case sf::Keyboard::Right:normalOffset.x = speed; break;
-		case sf::Keyboard::Z:
+		case sf::Keyboard::W:normalOffset.y = -speed; break;
+		case sf::Keyboard::S:normalOffset.y = speed; break;
+		case sf::Keyboard::A:normalOffset.x = -speed; break;
+		case sf::Keyboard::D:normalOffset.x = speed; break;
+		case sf::Keyboard::Space:
 			if (!shooting) {
 				shooting = true;
 				firstShoot = true;
@@ -23,26 +45,22 @@ void Player::control(const sf::Event& e) {
 			}
 			break;
 		case sf::Keyboard::Num1:
-			if (score >= dmg) {
-				score -= dmg;
-				dmg += 1;
-			}
+			dmg.tryUpgrade(score);
 			break;
 		case sf::Keyboard::Num2:
-			if (score >= dmg) {
-				score -= dmg;
-				dmg += 1;
-			}
+			shootDuration.tryUpgrade(score);
+			break;
+		case sf::Keyboard::Num3:
 			break;
 		}
 		break;
 	case sf::Event::KeyReleased:
 		switch (e.key.code) {
-		case sf::Keyboard::Up:normalOffset.y = 0; break;
-		case sf::Keyboard::Down:normalOffset.y = 0; break;
-		case sf::Keyboard::Left:normalOffset.x = 0; break;
-		case sf::Keyboard::Right:normalOffset.x = 0; break;
-		case sf::Keyboard::Z:
+		case sf::Keyboard::W:normalOffset.y = 0; break;
+		case sf::Keyboard::S:normalOffset.y = 0; break;
+		case sf::Keyboard::A:normalOffset.x = 0; break;
+		case sf::Keyboard::D:normalOffset.x = 0; break;
+		case sf::Keyboard::Space:
 			shooting = false;
 			break;
 		}
@@ -70,10 +88,26 @@ void Player::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
 	} else {
 		BaseObject::draw(ren, states);
 	}
+	ren.draw(shieldAnimation);
+	drawCircle(ren, shieldHitbox, sf::Color::Cyan);
 }
 
 void Player::update() {
 	BaseObject::update();
+
+	shieldDir = game->mousePos / 2 - hitbox.getCenter();
+	shieldAnimation.setColor({ 255,255,255,sf::Uint8(255 * shieldHealth / 5.) });
+	shieldAnimation.setRotation(-gm::VY ^ shieldDir);
+	shieldAnimation.setPosition(hitbox.getCenter());
+	shieldAnimation.update();
+	shieldHitbox.setCenter(hitbox.getCenter());
+	if (shieldHealth < 5) {
+		shieldHealth += shieldRegenSpeed * game->curFrameSec;
+		if (shieldHealth > 5) {
+			shieldHealth = 5;
+		}
+	}
+
 	if (hitbox.getTop() < game->bounds.getTop()) {
 		hitbox.move({ .0, game->bounds.getTop() - hitbox.getTop() });
 	}
@@ -88,13 +122,8 @@ void Player::update() {
 	}
 	if (shooting && (firstShoot || !shootTimer.update())) {
 		firstShoot = false;
-		shootTimer.restart();
-		game->bullets.push_back(std::make_unique<Bullet>(
-			game,
-			sf::Sprite(game->textures["bullet"]),
-			hitbox.getCenter() - 20 * gm::VY,
-			0.5,
-			dmg
-			));
+		shootTimer.restart(shootDuration);
+		// shootSound.play();
+		game->addBullet<Bullet>(hitbox.getCenter() - 20 * gm::VY, 0.5, *dmg);
 	}
 }

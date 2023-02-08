@@ -106,7 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\include;C:\Users\kust\Programming\C++\Progects\Geometry\Geometry;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\include;C:\Users\kust\Programming\C++\Progects\Geometry\x64\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -114,8 +114,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\lib;C:\Users\kust\Programming\C++\Progects\Geometry\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;Geometry.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\lib;C:\Users\kust\Programming\C++\Progects\Geometry\x64\bin\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;Geometry.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,50 +126,94 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\include;C:\Users\kust\Programming\C++\Progects\Geometry\Geometry;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\include;C:\Users\kust\Programming\C++\Progects\Geometry\x64\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-main.lib;Geometry.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\lib;C:\Users\kust\Programming\C++\Progects\Geometry\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-main.lib;sfml-audio.lib;Geometry.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\lib;C:\Users\kust\Programming\C++\Progects\Geometry\x64\bin\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BackTimer.cpp" />
     <ClCompile Include="BaseObject.cpp" />
+    <ClCompile Include="BaseScreenObject.cpp" />
+    <ClCompile Include="Bonus.cpp" />
+    <ClCompile Include="BounceEnemy.cpp" />
     <ClCompile Include="Bulet.cpp" />
+    <ClCompile Include="DMGBonus.cpp" />
     <ClCompile Include="DrawBaseElement.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HealBonus.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MyClock.cpp" />
+    <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="MySprite.cpp" />
+    <ClCompile Include="Names.cpp" />
     <ClCompile Include="Painter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="SinusEnemy.cpp" />
+    <ClCompile Include="SpeedBonus.cpp" />
+    <ClCompile Include="SpriteContainer.cpp" />
+    <ClCompile Include="DataStorage.cpp" />
+    <ClCompile Include="StraigthEnemy.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="BackTimer.h" />
     <ClInclude Include="BaseObject.h" />
+    <ClInclude Include="BaseScreenObject.h" />
+    <ClInclude Include="Bonus.h" />
+    <ClInclude Include="BounceEnemy.h" />
     <ClInclude Include="Bulet.h" />
+    <ClInclude Include="DataStorage.h" />
+    <ClInclude Include="DMGBonus.h" />
     <ClInclude Include="DrawBaseElement.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="MyClock.h" />
+    <ClInclude Include="Clock.h" />
+    <ClInclude Include="HealBonus.h" />
+    <ClInclude Include="MySprite.h" />
+    <ClInclude Include="Names.h" />
     <ClInclude Include="Painter.h" />
+    <ClInclude Include="Parametr.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="SinusEnemy.h" />
+    <ClInclude Include="SpeedBonus.h" />
+    <ClInclude Include="SpriteContainer.h" />
+    <ClInclude Include="StraigthEnemy.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets'))" />
+  </Target>
 </Project>

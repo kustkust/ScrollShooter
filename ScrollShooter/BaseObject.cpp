@@ -3,28 +3,43 @@
 #include "Game.h"
 #include "SFML/Graphics/RenderTarget.hpp"
 #include <string>
+#include "DataStorage.h"
 
-BaseObject::BaseObject(std::shared_ptr<Game> game, sf::Sprite sprite, const gm::Coord2D& pos) :
-	game(game), sprite(sprite), hitbox({}, { sprite.getGlobalBounds().width,sprite.getGlobalBounds().height }) {
+BaseObject::BaseObject(std::shared_ptr<Game> game, const std::string& animName, const gm::Coord& pos) :
+	game(game), anim(AnimationStorage.get(animName)), hitbox({}, anim.getSize()) {
 	hitbox.setCenter(pos);
+	init();
+}
+
+void BaseObject::init() {
+	toDelete = false;
 }
 
 void BaseObject::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
-	sprite.setPosition(hitbox.getCenter() - gm::Size2D(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2));
-	ren.draw(sprite);
+	anim.setCenter(hitbox.getCenter().correct_coord(1));
+	anim.update();
+	ren.draw(anim);
 }
 
 void BaseObject::update() {
-	auto offset = normalOffset * game->curFrameTime;
+	auto offset = normalOffset * static_cast<gm::real>(game->curFrameTime);
 	hitbox.move(offset);
 }
 
 void BaseObject::takeDamage(int damage) {
 	if (!toDelete){
-		healf -= damage;
-		if (healf <= 0) {
+		*health -= damage;
+		if (health <= 0) {
+			health = 0;
 			toDelete = true;
 		}
 	}
-	
+}
+
+bool BaseObject::collide(BaseObject* other) {
+	return (collisionLayers & other->collisionLayers).any();
+}
+
+bool BaseObject::onDeleting() {
+	return false;
 }

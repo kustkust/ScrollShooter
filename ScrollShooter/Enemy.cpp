@@ -1,26 +1,31 @@
 #include "pch.h"
 #include "Enemy.h"
 #include "Game.h"
+#include "HealBonus.h"
+#include "DMGBonus.h"
+#include "SpeedBonus.h"
 
-Enemy::Enemy(std::shared_ptr<Game> game, sf::Sprite sprite, const gm::Coord2D& pos) :
-	BaseObject(game, sprite, pos) {
+Enemy::Enemy(std::shared_ptr<Game> game, const std::string& animName, const gm::Coord& pos) :
+	BaseObject(game, animName, pos) {
 	normalOffset.y = speed;
 	hitbox.setSize({ 32,32 });
-	healf = 5;
+	health.reset(5);
+	collisionLayers[0] = 1;
+	collisionLayers[1] = 1;
 }
 
 void Enemy::update() {
 	BaseObject::update();
-	if (!hitbox.intersect(game->bounds)) {
+	if (hitbox.outside(game->bounds)) {
 		toDelete = true;
 	}
 }
 
 void Enemy::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
 	if (damaged.update()) {
-		sprite.setColor({ 255,128,128 });
+		anim.setColor({ 255,128,128 });
 	} else {
-		sprite.setColor(sf::Color::White);
+		anim.setColor(sf::Color::White);
 	}
 	BaseObject::draw(ren, states);
 }
@@ -32,4 +37,19 @@ void Enemy::takeDamage(int dmg) {
 
 int Enemy::getScore() const {
 	return score;
+}
+
+bool Enemy::onDeleting() {
+	dropBonus();
+	return false;
+}
+
+void Enemy::dropBonus() const {
+	if (health == 0) {
+		switch (game->bonusType(game->gen)) {
+		case 0: game->addBonus<HealBonus>(hitbox.getPosition()); break;
+		case 1: game->addBonus<DMGBonus>(hitbox.getPosition()); break;
+		case 2: game->addBonus<SpeedBonus>(hitbox.getPosition()); break;
+		}
+	}
 }

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Timer.h"
 
-Timer::Timer(MyClock* clock) : 
+Timer::Timer(Clock* clock) : 
 	clock(clock), lastCheck(clock->getDuration()), elasped{}, isRun(true), pauseTime(0) {
 }
 

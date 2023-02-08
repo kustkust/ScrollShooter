@@ -1,14 +1,14 @@
 #include "pch.h"
-#include "MyClock.h"
+#include "Clock.h"
 using namespace std::chrono_literals;
 
-MyClock::MyClock() :
+Clock::Clock() :
 	isRun(false),
 	lastTime(std::chrono::steady_clock::now()),
 	savedTime(0ms)
 {}
 
-void MyClock::update() {
+void Clock::update() {
 	if (isRun) {
 		auto t = std::chrono::steady_clock::now();
 		savedTime += to_duration(t - lastTime);
@@ -16,25 +16,25 @@ void MyClock::update() {
 	}
 }
 
-void MyClock::restart() {
+void Clock::restart() {
 	savedTime = 0ms;
 	lastTime = std::chrono::steady_clock::now();
 }
 
-void MyClock::stop() {
+void Clock::stop() {
 	if (isRun) {
 		update();
 		isRun = false;
 	}
 }
 
-void MyClock::start() {
+void Clock::start() {
 	if (!isRun) {
 		lastTime = std::chrono::steady_clock::now();
 		isRun = true;
 	}
 }
-bool MyClock::switchTimer() {
+bool Clock::switchClock() {
 	if (isRun) {
 		stop();
 		return false;
@@ -45,13 +45,13 @@ bool MyClock::switchTimer() {
 	}
 }
 
-duration MyClock::getDuration() {
+duration Clock::getDuration() {
 	update();
 	return savedTime;
 }
 
-int64_t MyClock::getTime() {
+int64_t Clock::getTime() {
 	return getDuration().count();
 }
 
-MyClock MyClock::clock = MyClock();
+Clock Clock::clock = Clock();

@@ -2,7 +2,7 @@
 #include "BackTimer.h"
 using namespace std::chrono_literals;
 
-BackTimer::BackTimer(duration t, MyClock* clock_) :
+BackTimer::BackTimer(duration t, Clock* clock_) :
 	maxTime(t),
 	timerEnd(0),
 	pauseTime(0),
@@ -17,11 +17,11 @@ BackTimer& BackTimer::operator=(duration i) {
 	return *this;
 }
 
-void BackTimer::setClock(MyClock* newClock) {
+void BackTimer::setClock(Clock* newClock) {
 	clock = newClock;
 }
 
-MyClock* BackTimer::getClock() const {
+Clock* BackTimer::getClock() const {
 	return clock;
 }
 
@@ -40,6 +40,10 @@ duration BackTimer::getMaxTime() const {
 
 bool BackTimer::update() const {
 	return (operator duration()).count();
+}
+
+bool BackTimer::finish() const {
+	return !update();
 }
 
 void BackTimer::setMaxTime(duration t) {

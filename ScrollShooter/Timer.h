@@ -1,14 +1,14 @@
 #pragma once
-#include "MyClock.h"
+#include "Clock.h"
 
 class Timer {
-	MyClock* clock;
+	Clock* clock;
 	duration lastCheck;
 	duration pauseTime;
 	duration elasped;
 	bool isRun;
 public:
-	Timer(MyClock* clock = &MyClock::clock);
+	Timer(Clock* clock = &Clock::clock);
 	duration sinceLast();
 	void restart();
 	void pause();
