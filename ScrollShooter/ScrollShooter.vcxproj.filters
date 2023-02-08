@@ -109,7 +109,7 @@
       <Filter>Исходные файлы\Game</Filter>
     </ClCompile>
     <ClCompile Include="Boss.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
