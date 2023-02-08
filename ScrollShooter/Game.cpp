@@ -171,7 +171,7 @@ void Game::update() {
 
 		if (player.shieldHealth > 1) {
 			for (auto& enemy : enemys.collide(&player.shieldHitbox)) {
-				if (!enemy->toDelete && smallestAng(enemy->hitbox->getCenter() - player.hitbox->getCenter(), player.shieldDir) < gm::PI / 4) {
+				if (!enemy->toDelete && std::abs((enemy->hitbox->getCenter() - player.hitbox->getCenter()) ^ player.shieldDir) < gm::PI / 4) {
 					enemy->toDelete = true;
 					player.shieldHealth -= 1;
 				}
