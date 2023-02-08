@@ -26,6 +26,7 @@ void BaseObject::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
 void BaseObject::update() {
 	auto offset = normalOffset * static_cast<gm::real>(game->curFrameTime);
 	hitbox->move(offset);
+	anim.update();
 }
 
 void BaseObject::takeDamage(int damage) {
