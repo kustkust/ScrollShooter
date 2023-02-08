@@ -48,6 +48,7 @@ public:
 	virtual void setPosition(const gm::Vector& pos_);
 	virtual void setPosition(const float& x, const float& y);
 	virtual const gm::Rectangle getGlobalBounds() const;
+	virtual const gm::Rectangle getLocalBounds() const;
 
 	virtual void setVisible(const bool vis_ = 1);
 	virtual const bool getVisible() const;

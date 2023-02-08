@@ -54,6 +54,10 @@ const gm::Rectangle MySprite::getGlobalBounds() const {
 	return spr.getGlobalBounds();
 }
 
+const gm::Rectangle MySprite::getLocalBounds() const {
+	return spr.getLocalBounds();
+}
+
 void MySprite::setSize(const gm::Size& newSize) {
 	auto size = getSize();
 	spr.setScale({

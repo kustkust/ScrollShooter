@@ -45,6 +45,8 @@ public:
 	void setVerticalSide(double side_);
 	void reverseVerticalSide();
 
+	const gm::Rectangle getLocalBounds() const override;
+
 	void setOrigin(const gm::Vector& pos);
 	void setOrigin();
 

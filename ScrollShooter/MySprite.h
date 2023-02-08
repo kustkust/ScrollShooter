@@ -22,6 +22,7 @@ public:
 	const gm::Vector getPosition() const override;
 
 	const gm::Rectangle getGlobalBounds() const override;
+	const gm::Rectangle getLocalBounds() const override;
 	void setSize(const gm::Size& newSize) override;
 	const gm::Vector getSize() const override;
 	const int update() override;

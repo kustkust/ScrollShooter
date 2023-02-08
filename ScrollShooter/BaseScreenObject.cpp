@@ -69,6 +69,10 @@ const gm::Rectangle BaseScreenObject::getGlobalBounds() const {
 	return gm::Rectangle(getPosition(), getSize());
 }
 
+const gm::Rectangle BaseScreenObject::getLocalBounds() const {
+	return getGlobalBounds();
+}
+
 void BaseScreenObject::setVisible(const bool vis_) {
 	visible = vis_;
 }

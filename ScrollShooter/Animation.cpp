@@ -268,6 +268,10 @@ void Animations::reverseVerticalSide() {
 	setHorizontalSide(-sgn(getScale().y));
 }
 
+const gm::Rectangle Animations::getLocalBounds() const {
+	return frames[currentFrame].spr.getLocalBounds();
+}
+
 void Animations::setOrigin(const gm::Vector& pos) {
 	for (auto& s : frames) {
 		s.spr.setOrigin(pos);
