@@ -4,13 +4,13 @@
 
 Bullet::Bullet(std::shared_ptr<Game> game, const gm::Coord& pos, gm::real speed, int dmg): BaseObject(game, "Bullet", pos), speed(speed), dmg(dmg) {
 	normalOffset.y = -speed;
-	hitbox.setSize({ 32,32 });
+	hitbox->setSize({ 32,32 });
 	collisionLayers[1] = 1;
 }
 
 void Bullet::update() {
 	BaseObject::update();
-	if (hitbox.outside(game->bounds)) {
+	if (hitbox->outside(game->bounds)) {
 		toDelete = true;
 	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector.h"
-#include "Rectangle.h"
+#include "Shape.h"
 #include "SFML/Graphics/Sprite.hpp"
 #include "Parametr.h"
 #include "Animation.h"
@@ -24,7 +24,7 @@ public:
 	mutable Animations anim;
 	std::shared_ptr<Game> game;
 	Parametr<int> health{ 1, 0 };
-	gm::Rectangle hitbox;
+	std::unique_ptr<gm::IShape> hitbox;
 	gm::Vector normalOffset;
 	bool toDelete = false;
 

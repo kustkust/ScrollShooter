@@ -95,12 +95,12 @@ void Player::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
 void Player::update() {
 	BaseObject::update();
 
-	shieldDir = game->mousePos / 2 - hitbox.getCenter();
+	shieldDir = game->mousePos / 2 - hitbox->getCenter();
 	shieldAnimation.setColor({ 255,255,255,sf::Uint8(255 * shieldHealth / 5.) });
 	shieldAnimation.setRotation(-gm::VY ^ shieldDir);
-	shieldAnimation.setPosition(hitbox.getCenter());
+	shieldAnimation.setPosition(hitbox->getCenter());
 	shieldAnimation.update();
-	shieldHitbox.setCenter(hitbox.getCenter());
+	shieldHitbox.setCenter(hitbox->getCenter());
 	if (shieldHealth < 5) {
 		shieldHealth += shieldRegenSpeed * game->curFrameSec;
 		if (shieldHealth > 5) {
@@ -108,22 +108,22 @@ void Player::update() {
 		}
 	}
 
-	if (hitbox.getTop() < game->bounds.getTop()) {
-		hitbox.move({ .0, game->bounds.getTop() - hitbox.getTop() });
+	if (hitbox->getTop() < game->bounds.getTop()) {
+		hitbox->move({ .0, game->bounds.getTop() - hitbox->getTop() });
 	}
-	if (hitbox.getBottom() > game->bounds.getBottom()) {
-		hitbox.move({ .0, game->bounds.getBottom() - hitbox.getBottom() });
+	if (hitbox->getBottom() > game->bounds.getBottom()) {
+		hitbox->move({ .0, game->bounds.getBottom() - hitbox->getBottom() });
 	}
-	if (hitbox.getLeft() < game->bounds.getLeft()) {
-		hitbox.move({ game->bounds.getLeft() - hitbox.getLeft(), 0. });
+	if (hitbox->getLeft() < game->bounds.getLeft()) {
+		hitbox->move({ game->bounds.getLeft() - hitbox->getLeft(), 0. });
 	}
-	if (hitbox.getRight() > game->bounds.getRight()) {
-		hitbox.move({ game->bounds.getRight() - hitbox.getRight(), 0. });
+	if (hitbox->getRight() > game->bounds.getRight()) {
+		hitbox->move({ game->bounds.getRight() - hitbox->getRight(), 0. });
 	}
 	if (shooting && (firstShoot || !shootTimer.update())) {
 		firstShoot = false;
 		shootTimer.restart(shootDuration);
 		// shootSound.play();
-		game->addBullet<Bullet>(hitbox.getCenter() - 20 * gm::VY, 0.5, *dmg);
+		game->addBullet<Bullet>(hitbox->getCenter() - 20 * gm::VY, 0.5, *dmg);
 	}
 }

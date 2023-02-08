@@ -9,9 +9,9 @@ BounceEnemy::BounceEnemy(std::shared_ptr<Game> game, const gm::Vector& pos) :
 
 void BounceEnemy::update() {
 	Enemy::update();
-	if (hitbox.getLeft() <= game->bounds.getLeft()) {
+	if (hitbox->getLeft() <= game->bounds.getLeft()) {
 		normalOffset.x = std::abs(normalOffset.x);
-	} else if (hitbox.getRight() >= game->bounds.getRight()) {
+	} else if (hitbox->getRight() >= game->bounds.getRight()) {
 		normalOffset.x = -std::abs(normalOffset.x);
 	}
 }

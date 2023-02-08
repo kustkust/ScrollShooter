@@ -8,7 +8,7 @@
 Enemy::Enemy(std::shared_ptr<Game> game, const std::string& animName, const gm::Coord& pos) :
 	BaseObject(game, animName, pos) {
 	normalOffset.y = speed;
-	hitbox.setSize({ 32,32 });
+	hitbox->setSize({ 32,32 });
 	health.reset(5);
 	collisionLayers[0] = 1;
 	collisionLayers[1] = 1;
@@ -16,7 +16,7 @@ Enemy::Enemy(std::shared_ptr<Game> game, const std::string& animName, const gm::
 
 void Enemy::update() {
 	BaseObject::update();
-	if (hitbox.outside(game->bounds)) {
+	if (hitbox->outside(game->bounds)) {
 		toDelete = true;
 	}
 }
@@ -47,9 +47,9 @@ bool Enemy::onDeleting() {
 void Enemy::dropBonus() const {
 	if (health == 0) {
 		switch (game->bonusType(game->gen)) {
-		case 0: game->addBonus<HealBonus>(hitbox.getPosition()); break;
-		case 1: game->addBonus<DMGBonus>(hitbox.getPosition()); break;
-		case 2: game->addBonus<SpeedBonus>(hitbox.getPosition()); break;
+		case 0: game->addBonus<HealBonus>(hitbox->getPosition()); break;
+		case 1: game->addBonus<DMGBonus>(hitbox->getPosition()); break;
+		case 2: game->addBonus<SpeedBonus>(hitbox->getPosition()); break;
 		}
 	}
 }

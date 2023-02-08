@@ -12,9 +12,9 @@
 
 Game::Game() :
 	bounds({ 0, 0 }, { 320, 480 }), curFrameTime{},
-	enemys(bounds, 8, [](const std::unique_ptr<Enemy>& en) { return en->hitbox; }),
-	bullets(bounds, 8, [](const std::unique_ptr<Bullet>& en) { return en->hitbox; }),
-	bonuses(bounds, 8, [](const std::unique_ptr<Bonus>& en) { return en->hitbox; }),
+	enemys(bounds, 8, [](const std::unique_ptr<Enemy>& en) { return en->hitbox->getBounds(); }),
+	bullets(bounds, 8, [](const std::unique_ptr<Bullet>& en) { return en->hitbox->getBounds(); }),
+	bonuses(bounds, 8, [](const std::unique_ptr<Bonus>& en) { return en->hitbox->getBounds(); }),
 	paint(window) {
 	background = SpriteStorage["Background"];
 	background.setTextureRect({ {},screenSize.addY(32) });
@@ -37,7 +37,7 @@ void Game::init() {
 }
 
 void Game::startGame() {
-	player.hitbox.setCenter(bounds.getSize() / 2);
+	player.hitbox->setCenter(bounds.getSize() / 2);
 	player.init();
 	spawnTimer.restart(duration(spawnDuratin(gen)));
 	state = GameState::Play;
@@ -171,15 +171,15 @@ void Game::update() {
 
 		if (player.shieldHealth > 1) {
 			for (auto& enemy : enemys.collide(&player.shieldHitbox)) {
-				if (!enemy->toDelete && smallestAng(enemy->hitbox.getCenter() - player.hitbox.getCenter(), player.shieldDir) < gm::PI / 4) {
+				if (!enemy->toDelete && smallestAng(enemy->hitbox->getCenter() - player.hitbox->getCenter(), player.shieldDir) < gm::PI / 4) {
 					enemy->toDelete = true;
 					player.shieldHealth -= 1;
 				}
 			}
 		}
 
-		for (auto& enemy : enemys.collide(&player.hitbox)) {
-			if (!enemy->toDelete && enemy->hitbox.fastCollides(player.hitbox)) {
+		for (auto& enemy : enemys.collide(player.hitbox.get())) {
+			if (!enemy->toDelete && enemy->hitbox->fastCollides(player.hitbox.get())) {
 				enemy->toDelete = true;
 				player.takeDamage(1);
 				if (player.health <= 0) {
@@ -188,22 +188,22 @@ void Game::update() {
 			}
 		}
 
-		for (auto& bonus : bonuses.collide(&player.hitbox)) {
+		for (auto& bonus : bonuses.collide(player.hitbox.get())) {
 			bonus->interact(player);
 			bonus->toDelete = true;
 		}
 
 		for (auto& enemy : enemys) {
-			if (enemy->hitbox.outside(bounds)) {
+			if (enemy->hitbox->outside(bounds)) {
 				enemy->toDelete = true;
 			}
 			if (enemy->toDelete) continue;
-			for (auto& bullet : bullets.collide(&enemy->hitbox)) {
-				if (bullet->hitbox.outside(bounds)) {
+			for (auto& bullet : bullets.collide(enemy->hitbox.get())) {
+				if (bullet->hitbox->outside(bounds)) {
 					bullet->toDelete = true;
 				}
 				if (bullet->toDelete) continue;
-				if (bullet->collide(enemy.get()) && bullet->hitbox.fastCollides(enemy->hitbox)) {
+				if (bullet->collide(enemy.get()) && bullet->hitbox->fastCollides(enemy->hitbox.get())) {
 					enemy->takeDamage(bullet->dmg);
 					if (enemy->toDelete) {
 						player.score += enemy->getScore();

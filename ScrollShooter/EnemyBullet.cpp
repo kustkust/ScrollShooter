@@ -7,9 +7,9 @@ EnemyBullet::EnemyBullet(std::shared_ptr<Game> game, const gm::Coord& pos, const
 	health = -1; // negative means undead
 	collisionLayers.reset();
 	collisionLayers[2] = 1;
-	auto center = hitbox.getCenter();
-	hitbox.setSize({ 4,4 });
-	hitbox.setCenter(center);
+	auto center = hitbox->getCenter();
+	hitbox->setSize({ 4,4 });
+	hitbox->setCenter(center);
 }
 
 void EnemyBullet::dropBonus() const {}

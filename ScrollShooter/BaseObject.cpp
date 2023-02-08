@@ -2,12 +2,14 @@
 #include "BaseObject.h"
 #include "Game.h"
 #include "SFML/Graphics/RenderTarget.hpp"
-#include <string>
 #include "DataStorage.h"
+#include "Rectangle.h"
 
 BaseObject::BaseObject(std::shared_ptr<Game> game, const std::string& animName, const gm::Coord& pos) :
-	game(game), anim(AnimationStorage.get(animName)), hitbox({}, anim.getSize()) {
-	hitbox.setCenter(pos);
+	game(game), 
+	anim(AnimationStorage.get(animName)), 
+	hitbox(std::make_unique<gm::Rectangle>(gm::VN, anim.getSize())) {
+	hitbox->setCenter(pos);
 	init();
 }
 
@@ -16,14 +18,14 @@ void BaseObject::init() {
 }
 
 void BaseObject::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
-	anim.setCenter(hitbox.getCenter().correct_coord(1));
+	anim.setCenter(hitbox->getCenter().correct_coord(1));
 	anim.update();
 	ren.draw(anim);
 }
 
 void BaseObject::update() {
 	auto offset = normalOffset * static_cast<gm::real>(game->curFrameTime);
-	hitbox.move(offset);
+	hitbox->move(offset);
 }
 
 void BaseObject::takeDamage(int damage) {
