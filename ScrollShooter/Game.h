@@ -52,17 +52,17 @@ public:
 	void update();
 
 	template<class T, class... Args>
-	void addEnemy(Args... args) {
-		enemys.insert(std::make_unique<T>(shared_from_this(), args...));
+	decltype(auto) addEnemy(Args... args) {
+		return enemys.insert(std::make_unique<T>(shared_from_this(), args...));
 	}
 
 	template<class T, class... Args>
-	void addBullet(Args... args) {
-		bullets.insert(std::make_unique<T>(shared_from_this(), args...));
+	decltype(auto) addBullet(Args... args) {
+		return bullets.insert(std::make_unique<T>(shared_from_this(), args...));
 	}
 
 	template<class T, class... Args>
-	void addBonus(Args... args) {
-		bonuses.insert(std::make_unique<T>(shared_from_this(), args...));
+	decltype(auto) addBonus(Args... args) {
+		return bonuses.insert(std::make_unique<T>(shared_from_this(), args...));
 	}
 };
