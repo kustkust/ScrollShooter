@@ -37,6 +37,8 @@ public:
 	gm::Vector bgOffset{ 0, -32 };
 	gm::real bgSpeed = 0.1;
 
+	bool showHitbox = false;
+
 	enum class GameState {
 		Play,
 		Loose,

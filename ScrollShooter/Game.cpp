@@ -67,9 +67,13 @@ void Game::control() {
 		if (event.type == sf::Event::MouseMoved) {
 			mousePos = gameTexture.mapCoordsToPixel({ float(event.mouseMove.x), float(event.mouseMove.y) });
 			// mousePos *= 2;
-		}
-		if (event.type == sf::Event::Closed) {
+		} else if (event.type == sf::Event::Closed) {
 			window.close();
+		} else if (event.type == sf::Event::KeyPressed) {
+			switch (event.key.code) {
+			case sf::Keyboard::F1:
+				showHitbox = !showHitbox;
+		}
 		}
 		switch (state) {
 		case GameState::Play:

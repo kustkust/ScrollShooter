@@ -4,6 +4,7 @@
 #include "SFML/Graphics/RenderTarget.hpp"
 #include "DataStorage.h"
 #include "Rectangle.h"
+#include "DrawBaseElement.h"
 
 BaseObject::BaseObject(std::shared_ptr<Game> game, const std::string& animName, const gm::Coord& pos) :
 	game(game), 
@@ -21,6 +22,11 @@ void BaseObject::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
 	anim.setCenter(hitbox->getCenter().correct_coord(1));
 	anim.update();
 	ren.draw(anim);
+	if (game->showHitbox) {
+		if (auto s = dynamic_cast<const gm::Rectangle*>(hitbox.get())) {
+			drawRectangle(ren, *s, sf::Color::Transparent, {128,0,0,64});
+		}
+	}
 }
 
 void BaseObject::update() {
