@@ -117,7 +117,7 @@ void drawDottedCircle(
 	ren.draw(arr);
 }
 
-//угол от 0 до 2PI
+// angle from 0 to 2PI
 void drawCirclePart(
 	sf::RenderTarget& ren,
 	const gm::Coord& center,
@@ -260,7 +260,7 @@ void drawRectangle(
 	const sf::Color& outlineColor, 
 	const sf::Color& fillColor
 ) {
-	drawRectangle(ren, rect.getLeftTop(), rect.getRightBottom(), outlineColor, fillColor);
+	drawRectangleS(ren, rect.getLeftTop(), rect.getSize(), outlineColor, fillColor);
 }
 
 void drawRectangle(
@@ -291,7 +291,8 @@ void drawRectangleS(
 	sf::RectangleShape shape(size);
 	shape.setFillColor(fillColor);;
 	shape.setOutlineColor(outlineColor);
-	shape.setPosition(leftTop);
+	shape.setPosition(leftTop - gm::VXY);
+	shape.setOutlineThickness(1);
 	ren.draw(shape);
 }
 
