@@ -4,18 +4,12 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "Parametr.h"
 #include "Animation.h"
+#include "CollisionLayrs.h"
 class Game;
-
-/*
-* Collision Layers
-* 0 - player and enemys
-* 1 - player's bullets and enemys
-* 2 - player and enemy's bullets
-*/
 
 class BaseObject : public sf::Drawable {
 public:
-	std::bitset<8> collisionLayers;
+	Layers collisionLayers;
 
 	BaseObject() = default;
 	BaseObject(std::shared_ptr<Game> game, const std::string& anim, const gm::Coord& pos);
