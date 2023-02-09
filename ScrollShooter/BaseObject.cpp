@@ -10,6 +10,7 @@ BaseObject::BaseObject(std::shared_ptr<Game> game, const std::string& animName, 
 	game(game), 
 	anim(AnimationStorage.get(animName)), 
 	hitbox(std::make_unique<gm::Rectangle>(gm::VN, anim.getSize())) {
+	anim.setOrigin();
 	hitbox->setCenter(pos);
 	init();
 }
@@ -19,7 +20,8 @@ void BaseObject::init() {
 }
 
 void BaseObject::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
-	anim.setCenter(hitbox->getCenter().correct_coord(1));
+	auto c = hitbox->getCenter();
+	anim.setPosition({ std::round(c.x), std::round(c.y) });
 	anim.update();
 	ren.draw(anim);
 	if (game->showHitbox) {
