@@ -47,9 +47,9 @@ bool Enemy::onDeleting() {
 void Enemy::dropBonus() const {
 	if (health == 0) {
 		switch (game->bonusType(game->gen)) {
-		case 0: game->addBonus<HealBonus>(hitbox->getPosition()); break;
-		case 1: game->addBonus<DMGBonus>(hitbox->getPosition()); break;
-		case 2: game->addBonus<SpeedBonus>(hitbox->getPosition()); break;
+		case 0: game->pushBackBonus<HealBonus>(hitbox->getPosition()); break;
+		case 1: game->pushBackBonus<DMGBonus>(hitbox->getPosition()); break;
+		case 2: game->pushBackBonus<SpeedBonus>(hitbox->getPosition()); break;
 		}
 	}
 }

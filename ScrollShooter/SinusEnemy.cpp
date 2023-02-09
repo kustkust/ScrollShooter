@@ -13,6 +13,6 @@ void SinusEnemy::update() {
 	hitbox->setPosition(sin(t/2) * 50 + initialX, hitbox->getY() + static_cast<gm::real>(game->curFrameTime) * 0.2);
 	if (shootTimer.finish()) {
 		shootTimer.restart();
-		game->addEnemy<EnemyBullet>(hitbox->getCenter() + gm::Vector{0, 8}, gm::Vector{ 0, 1 });
+		game->pushBackEnemy<EnemyBullet>(hitbox->getCenter() + gm::Vector{0, 8}, gm::Vector{ 0, 1 });
 	}
 }

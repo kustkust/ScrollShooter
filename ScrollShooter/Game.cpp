@@ -247,10 +247,10 @@ void Game::update() {
 			auto x = spawnPoint(gen);
 			switch (enemyType(gen)) {
 			case 0:
-				addEnemy<StraigthEnemy>(gm::Vector{ x, 32 });
+				pushBackEnemy<StraigthEnemy>(gm::Vector{ x, 32 });
 				break;
 			case 1:
-				addEnemy<SinusEnemy>(gm::Vector{ x, 32 });
+				pushBackEnemy<SinusEnemy>(gm::Vector{ x, 32 });
 				break;
 			case 2:
 				addEnemy<BounceEnemy>(gm::Vector{ x, 32 });

@@ -211,16 +211,36 @@ public:
 
 	}
 
-	NodeItem insert(const T& item) {
-		return root.insert(item, getBounds(item), items, items.begin());
+	NodeItem pushBack(const T& item) {
+		items.push_back(item);
+		auto [list, it] = root.insert(--items.end(), getBounds(items.back().item));
+		items.back().nodeList = list;
+		items.back().it = it;
+		return --items.end();
 	}
 
-	NodeItem insert(T&& item) {
+	NodeItem pushBack(T&& item) {
 		items.emplace_back(std::forward<T>(item));
 		auto [list, it] = root.insert(--items.end(), getBounds(items.back().item));
 		items.back().nodeList = list;
 		items.back().it = it;
 		return --items.end();
+	}
+
+	NodeItem pushFront(const T& item) {
+		items.push_front(item);
+		auto [list, it] = root.insert(items.begin(), getBounds(items.front().item));
+		items.front().nodeList = list;
+		items.front().it = it;
+		return items.begin();
+	}
+
+	NodeItem pushFront(T&& item) {
+		items.emplace_front(std::forward<T>(item));
+		auto [list, it] = root.insert(items.begin(), getBounds(items.front().item));
+		items.front().nodeList = list;
+		items.front().it = it;
+		return items.begin();
 	}
 
 	template<class... Args>
