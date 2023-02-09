@@ -7,7 +7,6 @@
 
 Enemy::Enemy(std::shared_ptr<Game> game, const std::string& animName, const gm::Coord& pos) :
 	BaseObject(game, animName, pos) {
-	normalOffset.y = speed;
 	hitbox->setSize({ 32,32 });
 	health.reset(5);
 	collisionLayers[0] = 1;
@@ -32,7 +31,9 @@ void Enemy::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
 
 void Enemy::takeDamage(int dmg) {
 	BaseObject::takeDamage(dmg);
-	damaged.restart(100ms);
+	if (dmg > 0) {
+		damaged.restart(100ms);
+	}
 }
 
 int Enemy::getScore() const {

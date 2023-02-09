@@ -3,6 +3,7 @@
 #include "BackTimer.h"
 
 class Enemy : public BaseObject {
+protected:
 	gm::real speed = 0.2;
 	BackTimer damaged;
 	int score = 1;
