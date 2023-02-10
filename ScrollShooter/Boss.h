@@ -36,7 +36,7 @@ public:
 
 	class LaserBeam : public Enemy {
 		BackTimer existTimer;
-		Laser* parent;
+		Laser* parent = nullptr;
 		friend class Laser;
 		gm::Coord endPoint;
 	public:
@@ -50,5 +50,6 @@ public:
 	static void makeBoss(std::shared_ptr<Game> game);
 	void update() override;
 	bool onDeleting() override;
+	void onChiledDeleting(Enemy* child);
 	void takeDamage(int dmg) override;
 };

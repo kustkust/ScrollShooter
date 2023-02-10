@@ -9,6 +9,7 @@ Boss::Boss(std::shared_ptr<Game> game) :
 	hitbox->setSize({ 128, 64 });
 	hitbox->setCenter({ game->bounds.getWidth() / 2, 128. });
 	health = 100;
+	collisionLayers &= ~PlayersBulletsVsEnemys;
 }
 
 void Boss::makeBoss(std::shared_ptr<Game> game) {
@@ -57,6 +58,12 @@ bool Boss::onDeleting() {
 	return true;
 }
 
+void Boss::onChiledDeleting(Enemy* child) {
+	if (!std::ranges::any_of(comp, [](auto ch) { return ch; })) {
+		collisionLayers |= PlayersBulletsVsEnemys;
+	}
+}
+
 void Boss::takeDamage(int dmg) {
 	if (std::ranges::any_of(comp, [](auto p) { return p; })) {
 		dmg = 0;
@@ -80,8 +87,10 @@ void Boss::Cannon::update() {
 bool Boss::Cannon::onDeleting() {
 	if (b->comp[b->leftCannon] == this) {
 		b->comp[b->leftCannon] = nullptr;
+		b->onChiledDeleting(this);
 	} else if (b->comp[b->rightCannon] == this) {
 		b->comp[b->rightCannon] = nullptr;
+		b->onChiledDeleting(this);
 	}
 	return true;
 }
@@ -107,7 +116,7 @@ void Boss::Laser::update() {
 		anim.setRotation(gm::VY ^ dir);
 		if (anim.restartIfFinish("shoot")) {
 			state = Shoot;
-			game->pushBackEnemy<Boss::LaserBeam>(hitbox->getCenter() + dir(30), dir, anim.getAnimTime("shoot"));
+			laser = game->pushBackEnemy<Boss::LaserBeam>(hitbox->getCenter() + dir(30), dir, anim.getAnimTime("shoot"))->item->as<Boss::LaserBeam>();
 		}
 		break;
 	}
@@ -122,7 +131,9 @@ void Boss::Laser::update() {
 bool Boss::Laser::onDeleting() {
 	if (b->comp[b->leftLaser] == this) {
 		b->comp[b->leftLaser] = nullptr;
+		b->onChiledDeleting(this);
 	} else if (b->comp[b->rightLaser] == this) {
+		b->onChiledDeleting(this);
 		b->comp[b->rightLaser] = nullptr;
 	}
 	if (laser) {
