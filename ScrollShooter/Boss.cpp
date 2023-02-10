@@ -5,9 +5,9 @@
 #include "EnemyBullet.h"
 
 Boss::Boss(std::shared_ptr<Game> game) :
-	Enemy(game, "Boss", game->bounds.getSize().mulX(0.5)) {
-	hitbox->setSize({ 128,48 });
-	hitbox->setCenter({ game->bounds.getWidth() / 2, 64. });
+	Enemy(game, "BossV2", game->bounds.getSize().mulX(0.5)) {
+	hitbox->setSize({ 128, 64 });
+	hitbox->setCenter({ game->bounds.getWidth() / 2, 128. });
 	health = 100;
 	collisionLayers[0] = 0;
 	// normalOffset = { 0.125, 0. };
@@ -18,16 +18,16 @@ void Boss::makeBoss(std::shared_ptr<Game> game) {
 	auto b = dynamic_cast<Boss*>(game->enemys.pushBack(std::unique_ptr<Boss>(new Boss(game)))->item.get());
 
 	b->comp[b->leftLaser] = dynamic_cast<Laser*>(game->pushBackEnemy<Laser>(b, gm::NV)->item.get());
-	b->comp[b->leftLaser]->hitbox->setCenter(b->hitbox->getLeftTop().add(18, 40));
+	b->comp[b->leftLaser]->hitbox->setCenter(b->hitbox->getLeftTop().add(21, 34));
 	b->comp[0] = b->comp[b->leftLaser];
 	b->comp[b->rightLaser] = dynamic_cast<Laser*>(game->pushBackEnemy<Laser>(b, gm::NV)->item.get());
-	b->comp[b->rightLaser]->hitbox->setCenter(b->hitbox->getLeftTop().add(110, 40));
+	b->comp[b->rightLaser]->hitbox->setCenter(b->hitbox->getLeftTop().add(107, 34));
 	b->comp[1] = b->comp[b->rightLaser];
 
-	b->comp[b->leftCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, gm::NV)->item.get());
+	b->comp[b->leftCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, "BossCannonV2Left", gm::NV)->item.get());
 	b->comp[b->leftCannon]->hitbox->setRightTop(b->hitbox->getTopCenter().addY(32));
 	b->comp[2] = b->comp[b->leftCannon];
-	b->comp[b->rightCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, gm::NV)->item.get());
+	b->comp[b->rightCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, "BossCannonV2Right", gm::NV)->item.get());
 	b->comp[b->rightCannon]->hitbox->setLeftTop(b->hitbox->getTopCenter().addY(32));
 	b->comp[3] = b->comp[b->rightCannon];
 
@@ -66,8 +66,8 @@ void Boss::takeDamage(int dmg) {
 	Enemy::takeDamage(dmg);
 }
 
-Boss::Cannon::Cannon(std::shared_ptr<Game> game, Boss* b, const gm::Coord& pos) :
-	Enemy(game, "BossCannon", pos), b(b) {
+Boss::Cannon::Cannon(std::shared_ptr<Game> game, Boss* b, const std::string& animName, const gm::Coord& pos) :
+	Enemy(game, animName, pos), b(b) {
 	anim.setTimes(1);
 	health = 10;
 }

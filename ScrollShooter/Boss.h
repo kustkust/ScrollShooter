@@ -15,7 +15,7 @@ public:
 	class Cannon : public Enemy {
 		Boss* b;
 	public:
-		Cannon(std::shared_ptr<Game> game, Boss* boss, const gm::Coord& pos);
+		Cannon(std::shared_ptr<Game> game, Boss* boss, const std::string& animName, const gm::Coord& pos);
 		void update() override;
 		bool onDeleting() override;
 	};
