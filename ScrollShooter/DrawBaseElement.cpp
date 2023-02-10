@@ -78,7 +78,7 @@ void drawCircle(
 	const sf::Color& outlineColor,
 	const sf::Color& fillColor
 ) {
-	sf::CircleShape circ(r);
+	sf::CircleShape circ(static_cast<float>(r));
 	circ.setPosition(o);
 	circ.setFillColor(fillColor);
 	circ.setOutlineColor(outlineColor);
