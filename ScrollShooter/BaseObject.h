@@ -22,6 +22,11 @@ public:
 	gm::Vector normalOffset;
 	bool toDelete = false;
 
+	template<class T>
+	T* as() {
+		return dynamic_cast<T*>(this);
+	}
+
 	virtual void init();
 	void draw(sf::RenderTarget& ren, sf::RenderStates states) const override;
 	virtual void update();
