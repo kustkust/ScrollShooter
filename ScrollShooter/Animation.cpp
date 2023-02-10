@@ -164,6 +164,38 @@ bool Animations::finish() const {
 	return times == 0;
 }
 
+void Animations::setFrameDuration(Duration d) {
+	for (auto& frame : frames) {
+		frame.duration = d;
+	}
+}
+
+void Animations::setFrameDuration(const std::string& tag, Duration d) {
+	auto& t = tags[currentAnim];
+	for (int i = t.from; i <= t.to; ++i) {
+		frames[i].duration = d;
+	}
+}
+
+void Animations::setAnimTime(Duration d) {
+	d /= frames.size();
+	for (auto& frame : frames) {
+		frame.duration = d;
+	}
+}
+
+void Animations::setAnimTime(const std::string& tag, Duration d) {
+	auto& t = tags[currentAnim];
+	if (t.direction == Tag::Ping_Pong) {
+		d /= static_cast<int64_t>(t.to - t.from + 1) * 2;
+	} else {
+		d /= static_cast<int64_t>(t.to - t.from + 1);
+	}
+	for (int i = t.from; i <= t.to; ++i) {
+		frames[i].duration = d;
+	}
+}
+
 void Animations::start() {
 	timer.resume();
 }

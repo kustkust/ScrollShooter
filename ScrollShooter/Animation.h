@@ -68,12 +68,16 @@ public:
 	int getTimes() const;
 	bool finish() const;
 
+	void setFrameDuration(Duration d);
+	void setFrameDuration(const std::string& tag, Duration d);
+	void setAnimTime(Duration d);
+	void setAnimTime(const std::string& tag, Duration d);
+
 	MySprite& operator[](size_t index);
 	const MySprite& at(size_t index)const;
 protected:
 	class Tag {
 	public:
-
 		int from{}, to{};
 		enum {
 			Forward,
