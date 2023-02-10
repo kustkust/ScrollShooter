@@ -60,6 +60,22 @@ void BackTimer::restart(Duration newTime) {
 	restart();
 }
 
+bool BackTimer::restartIfFinish() {
+	if (finish()) {
+		restart();
+		return true;
+	}
+	return false;
+}
+
+bool BackTimer::restartIfFinish(Duration newTime) {
+	if (finish()) {
+		restart(newTime);
+		return true;
+	}
+	return false;
+}
+
 void BackTimer::pause() {
 	if (isRun) {
 		isRun = false;
@@ -74,6 +90,7 @@ void BackTimer::resume() {
 	}
 }
 
-void BackTimer::throwOff() {
-	timerEnd = 0ms;
+void BackTimer::stop() {
+	isRun = false;
+	pauseTime = 0ms;
 }

@@ -25,11 +25,11 @@ public:
 	bool finish() const;
 	void restart();
 	void restart(Duration newTime);
+	bool restartIfFinish();
+	bool restartIfFinish(Duration newTime);
 	void pause();
 	void resume();
-
-	//сбрасывает время
-	void throwOff();
+	void stop();
 
 	~BackTimer() = default;
 };
