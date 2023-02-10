@@ -39,7 +39,7 @@ void Game::init() {
 void Game::startGame() {
 	player.hitbox->setCenter(bounds.getSize() / 2);
 	player.init();
-	spawnTimer.restart(duration(spawnDuratin(gen)));
+	spawnTimer.restart(Duration(spawnDuratin(gen)));
 	state = GameState::Play;
 }
 

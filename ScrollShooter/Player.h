@@ -13,8 +13,8 @@ public:
 
 	bool shooting = false;
 	bool firstShoot = false;
-	Parametr <duration> shootDuration{ 100ms, 1, 
-		[](duration& p) {if (p > 10ms) p -= 10ms; }, 
+	Parametr <Duration> shootDuration{ 100ms, 1, 
+		[](Duration& p) {if (p > 10ms) p -= 10ms; }, 
 		[](int& cost) { cost *= 2; } 
 	};
 	BackTimer shootTimer;
@@ -23,7 +23,7 @@ public:
 	sf::Sound shootSound;
 
 	BackTimer invictable;
-	duration inictableDuration = 500ms;
+	Duration inictableDuration = 500ms;
 	mutable bool show = true;
 	mutable BackTimer showTimer;
 

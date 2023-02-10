@@ -3,13 +3,13 @@
 
 class Timer {
 	Clock* clock;
-	duration lastCheck;
-	duration pauseTime;
-	duration elasped;
+	Duration lastCheck;
+	Duration pauseTime;
+	Duration elasped;
 	bool isRun;
 public:
 	Timer(Clock* clock = &Clock::clock);
-	duration sinceLast();
+	Duration sinceLast();
 	void restart();
 	void pause();
 	void resume();

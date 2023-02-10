@@ -5,7 +5,7 @@ Timer::Timer(Clock* clock) :
 	clock(clock), lastCheck(clock->getDuration()), elasped{}, isRun(true), pauseTime(0) {
 }
 
-duration Timer::sinceLast() {
+Duration Timer::sinceLast() {
 	auto tmp = clock->getDuration();
 	elasped = tmp - lastCheck;
 	lastCheck = tmp;

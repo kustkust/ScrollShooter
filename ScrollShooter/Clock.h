@@ -1,14 +1,14 @@
 #pragma once
 using namespace std::chrono_literals;
 using time_point = std::chrono::steady_clock::time_point;
-using duration = std::chrono::milliseconds;
+using Duration = std::chrono::milliseconds;
 
 class Clock {
 	time_point lastTime;
-	duration savedTime;
+	Duration savedTime;
 	bool isRun;
 	template<class T>
-	duration to_duration(T);
+	Duration to_duration(T);
 public:
 	Clock();
 	void update();
@@ -16,12 +16,12 @@ public:
 	void stop();
 	void start();
 	bool switchClock();
-	duration getDuration();
+	Duration getDuration();
 	int64_t getTime();
 	static Clock clock;
 };
 
 template<class T>
-inline duration Clock::to_duration(T timePoint) {
-	return std::chrono::duration_cast<duration>(timePoint);
+inline Duration Clock::to_duration(T timePoint) {
+	return std::chrono::duration_cast<Duration>(timePoint);
 }

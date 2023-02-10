@@ -10,7 +10,7 @@ public:
 	Animations(const Animations&) = default;
 	Animations& operator=(const Animations&) = default;
 	Animations(json& animjson);
-	Animations(const SpriteContainer& frames, duration dellay);
+	Animations(const SpriteContainer& frames, Duration dellay);
 
 	void load(json& animjson);
 	bool loadFromFile(const std::string& path);
@@ -88,7 +88,7 @@ protected:
 	class AnimFrame {
 	public:
 		MySprite spr;
-		duration duration;
+		Duration duration;
 	};
 	std::vector<AnimFrame>frames{};
 	int currentFrame{};
@@ -97,5 +97,5 @@ protected:
 	std::map<std::string, Tag>tags{};
 	std::vector<std::string>associationStr{};
 	gm::Coord pos{};
-	int times = -1; // how many times prefoem animation, -1 for inf
+	int times = -1; // how many times perform animation, -1 for inf
 };

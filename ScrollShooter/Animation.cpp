@@ -12,7 +12,7 @@ Animations::Animations(json& animjson) {
 	load(animjson);
 }
 
-Animations::Animations(const SpriteContainer& frames_, duration dellay) {
+Animations::Animations(const SpriteContainer& frames_, Duration dellay) {
 	for (auto& f : frames_) {
 		frames.push_back({ f,dellay });
 	}
@@ -27,7 +27,7 @@ Animations::Animations(const SpriteContainer& frames_, duration dellay) {
 void Animations::load(json& animjson) {
 	auto& texture = TextureStorage.get(dropExt(static_cast<std::string>(animjson[Name::Meta][Name::Image])));
 	for (auto& frame : animjson[Name::Frames]) {
-		frames.push_back({ {texture, jsonRect(frame[Name::Frame])}, duration(frame[Name::Duration]) });
+		frames.push_back({ {texture, jsonRect(frame[Name::Frame])}, Duration(frame[Name::Duration]) });
 	}
 	for (auto& frameTagjson : animjson[Name::Meta][Name::FrameTags]) {
 		tags[frameTagjson[Name::Name]] = Tag(frameTagjson);

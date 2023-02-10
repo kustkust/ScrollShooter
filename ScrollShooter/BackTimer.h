@@ -4,27 +4,27 @@
 class BackTimer {
 public:
 	Clock* clock;
-	duration maxTime;
-	duration timerEnd;
-	duration pauseTime;
+	Duration maxTime;
+	Duration timerEnd;
+	Duration pauseTime;
 	bool isRun;
 
-	BackTimer(duration t = duration(1), Clock* clock = &Clock::clock);
+	BackTimer(Duration t = Duration(1), Clock* clock = &Clock::clock);
 	BackTimer(const BackTimer&) = default;
-	BackTimer&operator=(duration i);
+	BackTimer&operator=(Duration i);
 	BackTimer&operator=(const BackTimer&) = default;
 
 	void setClock(Clock*newClock);
 	Clock*getClock()const;
 
-	operator duration() const;
-	duration getMaxTime()const;
-	void setMaxTime(duration t);
+	operator Duration() const;
+	Duration getMaxTime()const;
+	void setMaxTime(Duration t);
 
 	bool update() const;
 	bool finish() const;
 	void restart();
-	void restart(duration newTime);
+	void restart(Duration newTime);
 	void pause();
 	void resume();
 

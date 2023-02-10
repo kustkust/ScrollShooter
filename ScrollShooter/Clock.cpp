@@ -45,7 +45,7 @@ bool Clock::switchClock() {
 	}
 }
 
-duration Clock::getDuration() {
+Duration Clock::getDuration() {
 	update();
 	return savedTime;
 }
