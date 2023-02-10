@@ -9,8 +9,6 @@ Boss::Boss(std::shared_ptr<Game> game) :
 	hitbox->setSize({ 128, 64 });
 	hitbox->setCenter({ game->bounds.getWidth() / 2, 128. });
 	health = 100;
-	collisionLayers[0] = 0;
-	// normalOffset = { 0.125, 0. };
 }
 
 void Boss::makeBoss(std::shared_ptr<Game> game) {

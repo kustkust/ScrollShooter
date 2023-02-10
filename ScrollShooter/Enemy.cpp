@@ -9,8 +9,7 @@ Enemy::Enemy(std::shared_ptr<Game> game, const std::string& animName, const gm::
 	BaseObject(game, animName, pos) {
 	hitbox->setSize({ 32,32 });
 	health.reset(5);
-	collisionLayers[0] = 1;
-	collisionLayers[1] = 1;
+	collisionLayers = PlayersBulletsVsEnemys;
 }
 
 void Enemy::update() {
