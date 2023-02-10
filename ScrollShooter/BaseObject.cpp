@@ -52,6 +52,10 @@ bool BaseObject::collide(BaseObject* other) {
 	return (collisionLayers & other->collisionLayers).any();
 }
 
+void BaseObject::onCollideWithPlayer(const gm::Collision& col) {
+	toDelete = true;
+}
+
 bool BaseObject::onDeleting() {
 	return false;
 }

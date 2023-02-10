@@ -4,7 +4,7 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "Parametr.h"
 #include "Animation.h"
-#include "CollisionLayrs.h"
+#include "CollisionLayers.h"
 class Game;
 
 class BaseObject : public sf::Drawable {
@@ -32,6 +32,7 @@ public:
 	virtual void update();
 	virtual void takeDamage(int damage);
 	bool collide(BaseObject* other);
+	virtual void onCollideWithPlayer(const gm::Collision& col);
 	virtual bool onDeleting();
 	virtual ~BaseObject() = default;
 };
