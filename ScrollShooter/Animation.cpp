@@ -171,7 +171,7 @@ void Animations::setFrameDuration(Duration d) {
 }
 
 void Animations::setFrameDuration(const std::string& tag, Duration d) {
-	auto& t = tags[currentAnim];
+	auto& t = tags[tag];
 	for (int i = t.from; i <= t.to; ++i) {
 		frames[i].duration = d;
 	}
@@ -185,7 +185,7 @@ void Animations::setAnimTime(Duration d) {
 }
 
 void Animations::setAnimTime(const std::string& tag, Duration d) {
-	auto& t = tags[currentAnim];
+	auto& t = tags[tag];
 	if (t.direction == Tag::Ping_Pong) {
 		d /= static_cast<int64_t>(t.to - t.from + 1) * 2;
 	} else {
@@ -194,6 +194,35 @@ void Animations::setAnimTime(const std::string& tag, Duration d) {
 	for (int i = t.from; i <= t.to; ++i) {
 		frames[i].duration = d;
 	}
+}
+
+Duration Animations::getFrameDuration() const {
+	return frames.front().duration;
+}
+
+Duration Animations::getFrameDuration(const std::string& tag) const {
+	auto& t = tags.at(tag);
+	if (t.direction == Tag::Reverse) {
+		return frames[t.to].duration;
+	}
+	return frames[t.from].duration;
+}
+
+Duration Animations::getAnimTime() const {
+	Duration d = 0ms;
+	for (auto& frame : frames) {
+		d += frame.duration;
+	}
+	return d;
+}
+
+Duration Animations::getAnimTime(const std::string& tag) const {
+	Duration d = 0ms;
+	auto& t = tags.at(tag);
+	for (int i = t.from; i <= t.to; ++i) {
+		d += frames[i].duration;
+	}
+	return t.direction == Tag::Ping_Pong ? d * 2 : d;
 }
 
 void Animations::start() {

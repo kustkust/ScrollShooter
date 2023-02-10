@@ -73,6 +73,11 @@ public:
 	void setAnimTime(Duration d);
 	void setAnimTime(const std::string& tag, Duration d);
 
+	Duration getFrameDuration() const;
+	Duration getFrameDuration(const std::string& tag) const;
+	Duration getAnimTime() const;
+	Duration getAnimTime(const std::string& tag) const;
+
 	MySprite& operator[](size_t index);
 	const MySprite& at(size_t index)const;
 protected:
