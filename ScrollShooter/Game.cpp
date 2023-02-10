@@ -253,7 +253,7 @@ void Game::update() {
 				pushBackEnemy<SinusEnemy>(gm::Vector{ x, 32 });
 				break;
 			case 2:
-				addEnemy<BounceEnemy>(gm::Vector{ x, 32 });
+				pushBackEnemy<BounceEnemy>(gm::Vector{ x, 32 });
 				break;
 			}
 			// addEnemy<EnemyBullet>(gm::Vector{ bounds.getCenter().x, 10. }, gm::VY);
