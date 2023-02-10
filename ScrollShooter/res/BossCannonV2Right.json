@@ -48,7 +48,7 @@
  "meta": {
   "app": "https://www.aseprite.org/",
   "version": "1.2.40-x64",
-  "image": "SpeedBonusRight.png",
+  "image": "BossCannonV2Right.png",
   "format": "RGBA8888",
   "size": { "w": 160, "h": 32 },
   "scale": "1",
