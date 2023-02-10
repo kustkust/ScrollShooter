@@ -1,207 +1,214 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Исходные файлы">
+    <Filter Include="Source">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Файлы заголовков">
+    <Filter Include="Source\Game">
+      <UniqueIdentifier>{f4c64ddf-a664-4bd6-b01c-debc3916f8ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics">
+      <UniqueIdentifier>{6465aa73-59d1-4fd4-80b2-05763ad40e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Файлы ресурсов">
+    <Filter Include="Res">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Исходные файлы\Game">
-      <UniqueIdentifier>{f4c64ddf-a664-4bd6-b01c-debc3916f8ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Util">
+    <Filter Include="Source\Utile">
       <UniqueIdentifier>{46896b97-5448-475a-9acb-77863d695702}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Graphics">
-      <UniqueIdentifier>{6465aa73-59d1-4fd4-80b2-05763ad40e91}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="SinusEnemy.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="Utility.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="DrawBaseElement.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="Clock.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="Names.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="Painter.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="BackTimer.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="Bulet.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="BaseObject.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="Animation.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="BaseScreenObject.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="MySprite.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="SpriteContainer.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="DataStorage.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="StraigthEnemy.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="BounceEnemy.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="EnemyBullet.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="Bonus.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="QuadTree.cpp">
-      <Filter>Исходные файлы\Util</Filter>
+      <Filter>Source\Utile</Filter>
     </ClCompile>
     <ClCompile Include="HealBonus.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="DMGBonus.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="SpeedBonus.cpp">
-      <Filter>Исходные файлы\Game</Filter>
+      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="Boss.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Source\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionLayers.cpp">
+      <Filter>Source\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="BaseObject.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Bulet.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Clock.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="BackTimer.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="DrawBaseElement.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Utility.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Painter.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Parametr.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="SpriteContainer.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="BaseScreenObject.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="MySprite.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Names.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="DataStorage.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="SinusEnemy.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="StraigthEnemy.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="BounceEnemy.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="EnemyBullet.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="QuadTree.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Bonus.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="HealBonus.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="DMGBonus.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBonus.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Boss.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionLayers.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\README.md" />
   </ItemGroup>
 </Project>

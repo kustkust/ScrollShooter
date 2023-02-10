@@ -5,7 +5,7 @@
 Bullet::Bullet(std::shared_ptr<Game> game, const gm::Coord& pos, gm::real speed, int dmg): BaseObject(game, "Bullet", pos), speed(speed), dmg(dmg) {
 	normalOffset.y = -speed;
 	hitbox->setSize({ 32,32 });
-	collisionLayers[1] = 1;
+	collisionLayers = PlayersBulletsVsEnemys;
 }
 
 void Bullet::update() {

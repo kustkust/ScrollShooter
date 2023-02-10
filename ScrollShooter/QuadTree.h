@@ -164,7 +164,7 @@ private:
 		void collides(NodeItems& result, gm::IShape* bounds, const GetBounds& getBounds) const {
 			for (auto& it : items) {
 				if (bounds->collides(getBounds(it->item))) {
-					result.push_back(it);
+ 					result.push_back(it);
 				}
 			}
 			for (auto& child : children) {

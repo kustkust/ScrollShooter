@@ -26,7 +26,7 @@ void Player::init() {
 	normalOffset = gm::NV;
 	anim.restart();
 	shieldAnimation.setOrigin({ shieldAnimation.getWidth() / 2, shieldAnimation.getHeight() });
-	shieldHitbox.setSize({ 64., 64. });
+	shieldHitbox.setSize({ 50., 50. });
 	shieldAnimation.restart();
 }
 
@@ -90,7 +90,9 @@ void Player::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
 		BaseObject::draw(ren, states);
 	}
 	ren.draw(shieldAnimation);
-	drawCircle(ren, shieldHitbox, sf::Color::Cyan);
+	if (game->showHitbox) {
+		drawCircle(ren, shieldHitbox, sf::Color::Transparent, { 0, 255, 0, 64 });
+	}
 }
 
 void Player::update() {

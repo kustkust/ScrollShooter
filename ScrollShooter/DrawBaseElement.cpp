@@ -79,9 +79,10 @@ void drawCircle(
 	const sf::Color& fillColor
 ) {
 	sf::CircleShape circ(static_cast<float>(r));
-	circ.setPosition(o);
+	circ.setPosition(o.add(-r,-r) - gm::VXY);
 	circ.setFillColor(fillColor);
 	circ.setOutlineColor(outlineColor);
+	circ.setOutlineThickness(1);
 	ren.draw(circ);
 	/*sf::VertexArray arr{sf::PrimitiveType::LinesStrip};
 	auto v = gm::VI.relen(r);
@@ -99,7 +100,7 @@ void drawCircle(
 	const sf::Color& outlineColor,
 	const sf::Color& fillColor
 ) {
-	drawCircle(ren, circ.getCenter(), circ.radius, outlineColor, fillColor);
+	drawCircle(ren, circ.center, circ.radius, outlineColor, fillColor);
 }
 
 void drawDottedCircle(

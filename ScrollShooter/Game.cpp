@@ -129,9 +129,6 @@ void Game::draw() {
 		paint.setOffset({}).writeTextC("LOOSE", screenSize / 2);
 	}
 
-	paint.setOffset({});
-	paint.drawRectangleC(mousePos, { 10,10 });
-
 	window.display();
 }
 
@@ -260,7 +257,6 @@ void Game::update() {
 				pushBackEnemy<BounceEnemy>(gm::Vector{ x, 32 });
 				break;
 			}
-			// addEnemy<EnemyBullet>(gm::Vector{ bounds.getCenter().x, 10. }, gm::VY);
 		}
 		break;
 	}
