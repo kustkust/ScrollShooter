@@ -24,7 +24,7 @@ void Player::init() {
 	show = true;
 	score = 0;
 	normalOffset = gm::NV;
-	anim.start();
+	anim.restart();
 	shieldAnimation.setOrigin({ shieldAnimation.getWidth() / 2, shieldAnimation.getHeight() });
 	shieldHitbox.setSize({ 64., 64. });
 }

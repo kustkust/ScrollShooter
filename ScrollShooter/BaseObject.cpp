@@ -11,6 +11,7 @@ BaseObject::BaseObject(std::shared_ptr<Game> game, const std::string& animName, 
 	anim(AnimationStorage.get(animName)), 
 	hitbox(std::make_unique<gm::Rectangle>(gm::VN, anim.getSize())) {
 	anim.setOrigin();
+	anim.restart();
 	hitbox->setCenter(pos);
 	init();
 }

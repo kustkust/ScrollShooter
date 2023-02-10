@@ -48,6 +48,199 @@ bool Animations::loadFromFile(const std::string& path) {
 	return true;
 }
 
+void Animations::setTimes(int times_) {
+	times = times_;
+}
+
+int Animations::getTimes() const {
+	return times;
+}
+
+bool Animations::finish() const {
+	return times == 0;
+}
+
+void Animations::restart() {
+	if (tags[currentAnim].direction == Tag::Reverse) {
+		currentFrame = tags[currentAnim].to;
+	} else {
+		currentFrame = tags[currentAnim].from;
+	}
+	timer.restart(frames[currentFrame].duration);
+}
+
+void Animations::restart(int times) {
+	setTimes(times);
+	restart();
+}
+
+void Animations::restart(const std::string& tag) {
+	setAnim(tag);
+	restart();
+}
+
+void Animations::restart(const std::string& tag, int times) {
+	setAnim(tag);
+	setTimes(times);
+	restart();
+}
+
+bool Animations::restartIfFinish(int times) {
+	if (finish()) {
+		restart(times);
+		return true;
+	}
+	return false;
+}
+
+bool Animations::restartIfFinish(const std::string& tag, int times) {
+	if (finish()) {
+		restart(tag, times);
+		return true;
+	}
+	return false;
+}
+
+void Animations::pause() {
+	timer.pause();
+}
+
+void Animations::resume() {
+	timer.restart();
+}
+
+void Animations::stop() {
+	currentFrame = tags[currentAnim].from;
+	if (tags[currentAnim].direction == Tag::Reverse) {
+		currentFrame = tags[currentAnim].to;
+	}
+	timer.restart(frames[currentFrame].duration);
+	timer.pause();
+}
+
+void Animations::setFrameDuration(Duration d) {
+	for (auto& frame : frames) {
+		frame.duration = d;
+	}
+}
+
+void Animations::setCurAnimFrameDuration(Duration d) {
+	setFrameDuration(currentAnim, d);
+}
+
+void Animations::setFrameDuration(const std::string& tag, Duration d) {
+	auto& t = tags[tag];
+	for (int i = t.from; i <= t.to; ++i) {
+		frames[i].duration = d;
+	}
+}
+
+void Animations::setAnimTime(Duration d) {
+	d /= frames.size();
+	for (auto& frame : frames) {
+		frame.duration = d;
+	}
+}
+
+void Animations::setCurAnimTime(Duration d) {
+	setAnimTime(currentAnim, d);
+}
+
+void Animations::setAnimTime(const std::string& tag, Duration d) {
+	auto& t = tags[tag];
+	if (t.direction == Tag::Ping_Pong) {
+		d /= static_cast<int64_t>(t.to - t.from + 1) * 2;
+	} else {
+		d /= static_cast<int64_t>(t.to - t.from + 1);
+	}
+	for (int i = t.from; i <= t.to; ++i) {
+		frames[i].duration = d;
+	}
+}
+
+Duration Animations::getFrameDuration() const {
+	return frames.front().duration;
+}
+
+Duration Animations::getFrameDuration(const std::string& tag) const {
+	auto& t = tags.at(tag);
+	if (t.direction == Tag::Reverse) {
+		return frames[t.to].duration;
+	}
+	return frames[t.from].duration;
+}
+
+Duration Animations::getAnimTime() const {
+	Duration d = 0ms;
+	for (auto& frame : frames) {
+		d += frame.duration;
+	}
+	return d;
+}
+
+Duration Animations::getAnimTime(const std::string& tag) const {
+	Duration d = 0ms;
+	auto& t = tags.at(tag);
+	for (int i = t.from; i <= t.to; ++i) {
+		d += frames[i].duration;
+	}
+	return t.direction == Tag::Ping_Pong ? d * 2 : d;
+}
+
+void Animations::setAnim(const std::string& animName) {
+	currentAnim = animName;
+	currentFrame = tags[currentAnim].from;
+}
+
+void Animations::setAnim(int i) {
+	setAnim(associationStr[i]);
+}
+
+void Animations::setProgress(double t) {
+	auto& tag = tags[currentAnim];
+	if (tag.direction == Tag::Reverse ||
+		tag.direction == Tag::Ping_Pong && tag.pingPongDir == -1) {
+		t = 1. - t;
+	}
+	currentFrame = static_cast<int>(floor((tag.to - tag.from + 1) * t)) + tag.from;
+	setMin(currentFrame, tag.to);
+}
+
+void Animations::setFrame(int index) {
+	currentFrame = index;
+}
+
+void Animations::setCurrentAnimFrame(int index) {
+	currentFrame = tags[currentAnim].from + index;
+}
+
+void Animations::setAssociation(const std::vector<std::string>& assoc) {
+	if (assoc.size() == tags.size()) {
+		associationStr = assoc;
+	}
+}
+
+void Animations::setAssociation(const std::map<size_t, std::string>& assoc) {
+	if (assoc.size() == tags.size()) {
+		associationStr.resize(tags.size());
+		for (auto& a : assoc) {
+			associationStr[a.first] = a.second;
+		}
+	}
+}
+
+MySprite& Animations::operator[](size_t index) {
+	return frames[index].spr;
+}
+
+const MySprite& Animations::at(size_t index) const {
+	return frames[index].spr;
+}
+
+const Animations Animations::operator[](const std::string& tagname) const {
+	return getTegAnimation(tagname);
+}
+
 const Animations Animations::getTegAnimation(const std::string& tagname) const {
 	Animations newAnim;
 	auto& tag = tags.at(tagname);
@@ -67,44 +260,12 @@ const Animations Animations::getTegAnimation(const std::string& tagname) const {
 	return newAnim;
 }
 
-const Animations Animations::operator[](const std::string& tagname) const {
-	return getTegAnimation(tagname);
-}
-
-void Animations::move(const gm::Vector& off) {
-	pos += off;
-	for (auto& frame : frames) {
-		frame.spr.move(off);
-	}
-}
-
-void Animations::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
-	ren.draw(frames[currentFrame].spr);
-}
-
 const int Animations::interact(const sf::Event& ev, const gm::Vector& pos) {
 	return 0;
 }
 
-const gm::Vector Animations::getPosition() const {
-	return pos;
-}
-
-const gm::Vector Animations::getSize() const {
-	return frames[currentFrame].spr.getSize();
-}
-
-MySprite& Animations::operator[](size_t index) {
-	return frames[index].spr;
-}
-
-const MySprite& Animations::at(size_t index) const {
-	return frames[index].spr;
-}
-
 const int Animations::update() {
-	if (timer.finish()) {
-		timer.restart(frames[currentFrame].duration);
+	if (timer.restartIfFinish(frames[currentFrame].duration)) {
 		auto& tag = tags[currentAnim];
 		switch (tag.direction) {
 		case Tag::Forward:
@@ -152,140 +313,13 @@ const int Animations::update() {
 	return NothingHappend;
 }
 
-void Animations::setTimes(int times_) {
-	times = times_;
+void Animations::draw(sf::RenderTarget& ren, sf::RenderStates states) const {
+	ren.draw(frames[currentFrame].spr);
 }
 
-int Animations::getTimes() const {
-	return times;
-}
-
-bool Animations::finish() const {
-	return times == 0;
-}
-
-void Animations::setFrameDuration(Duration d) {
+void Animations::setColor(const sf::Color& color) {
 	for (auto& frame : frames) {
-		frame.duration = d;
-	}
-}
-
-void Animations::setFrameDuration(const std::string& tag, Duration d) {
-	auto& t = tags[tag];
-	for (int i = t.from; i <= t.to; ++i) {
-		frames[i].duration = d;
-	}
-}
-
-void Animations::setAnimTime(Duration d) {
-	d /= frames.size();
-	for (auto& frame : frames) {
-		frame.duration = d;
-	}
-}
-
-void Animations::setAnimTime(const std::string& tag, Duration d) {
-	auto& t = tags[tag];
-	if (t.direction == Tag::Ping_Pong) {
-		d /= static_cast<int64_t>(t.to - t.from + 1) * 2;
-	} else {
-		d /= static_cast<int64_t>(t.to - t.from + 1);
-	}
-	for (int i = t.from; i <= t.to; ++i) {
-		frames[i].duration = d;
-	}
-}
-
-Duration Animations::getFrameDuration() const {
-	return frames.front().duration;
-}
-
-Duration Animations::getFrameDuration(const std::string& tag) const {
-	auto& t = tags.at(tag);
-	if (t.direction == Tag::Reverse) {
-		return frames[t.to].duration;
-	}
-	return frames[t.from].duration;
-}
-
-Duration Animations::getAnimTime() const {
-	Duration d = 0ms;
-	for (auto& frame : frames) {
-		d += frame.duration;
-	}
-	return d;
-}
-
-Duration Animations::getAnimTime(const std::string& tag) const {
-	Duration d = 0ms;
-	auto& t = tags.at(tag);
-	for (int i = t.from; i <= t.to; ++i) {
-		d += frames[i].duration;
-	}
-	return t.direction == Tag::Ping_Pong ? d * 2 : d;
-}
-
-void Animations::start() {
-	timer.resume();
-}
-
-void Animations::stop() {
-	currentFrame = tags[currentAnim].from;
-	if (tags[currentAnim].direction == Tag::Reverse) {
-		currentFrame = tags[currentAnim].to;
-	}
-	timer.restart();
-	timer.pause();
-}
-
-void Animations::pause() {
-	timer.pause();
-}
-
-void Animations::restart() {
-	currentFrame = tags[currentAnim].from;
-	timer.restart();
-}
-
-void Animations::setAnim(const std::string& animName) {
-	currentAnim = animName;
-	currentFrame = tags[currentAnim].from;
-}
-
-void Animations::setAnim(int i) {
-	setAnim(associationStr[i]);
-}
-
-void Animations::setProgress(double t) {
-	auto& tag = tags[currentAnim];
-	if (tag.direction == Tag::Reverse ||
-		tag.direction == Tag::Ping_Pong && tag.pingPongDir == -1) {
-		t = 1. - t;
-	}
-	currentFrame = static_cast<int>(floor((tag.to - tag.from + 1) * t)) + tag.from;
-	setMin(currentFrame, tag.to);
-}
-
-void Animations::setFrame(int index) {
-	currentFrame = index;
-}
-
-void Animations::setCurrentAnimFrame(int index) {
-	currentFrame = tags[currentAnim].from + index;
-}
-
-void Animations::setAssociation(const std::vector<std::string>& assoc) {
-	if (assoc.size() == tags.size()) {
-		associationStr = assoc;
-	}
-}
-
-void Animations::setAssociation(const std::map<size_t, std::string>& assoc) {
-	if (assoc.size() == tags.size()) {
-		associationStr.resize(tags.size());
-		for (auto& a : assoc) {
-			associationStr[a.first] = a.second;
-		}
+		frame.spr.setColor(color);
 	}
 }
 
@@ -311,6 +345,14 @@ void Animations::setSize(const gm::Size& newSize) {
 	}
 }
 
+const gm::Vector Animations::getSize() const {
+	return frames[currentFrame].spr.getSize();
+}
+
+const gm::Rectangle Animations::getLocalBounds() const {
+	return frames[currentFrame].spr.getLocalBounds();
+}
+
 void Animations::setHorizontalSide(double side_) {
 	auto sc = getScale();
 	setScale({ side_ * abs(sc.x),sc.y });
@@ -329,10 +371,6 @@ void Animations::reverseVerticalSide() {
 	setHorizontalSide(-sgn(getScale().y));
 }
 
-const gm::Rectangle Animations::getLocalBounds() const {
-	return frames[currentFrame].spr.getLocalBounds();
-}
-
 void Animations::setOrigin(const gm::Vector& pos) {
 	for (auto& s : frames) {
 		s.spr.setOrigin(pos);
@@ -341,6 +379,10 @@ void Animations::setOrigin(const gm::Vector& pos) {
 
 void Animations::setOrigin() {
 	setOrigin(frames[currentFrame].spr.getSize() / 2.);
+}
+
+const gm::Coord Animations::getOrigin() const {
+	return frames.front().spr.getOrigin();
 }
 
 void Animations::rotate(gm::angle a) {
@@ -355,11 +397,21 @@ void Animations::setRotation(const gm::angle a) {
 	}
 }
 
-void Animations::setColor(const sf::Color& color) {
+gm::angle Animations::getRotation() const {
+	return frames.front().spr.getRotation();
+}
+
+void Animations::move(const gm::Vector& off) {
+	pos += off;
 	for (auto& frame : frames) {
-		frame.spr.setColor(color);
+		frame.spr.move(off);
 	}
 }
+
+const gm::Vector Animations::getPosition() const {
+	return pos;
+}
+
 
 Animations::Tag::Tag() {}
 

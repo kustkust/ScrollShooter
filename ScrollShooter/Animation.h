@@ -15,13 +15,30 @@ public:
 	void load(json& animjson);
 	bool loadFromFile(const std::string& path);
 
-	const Animations getTegAnimation(const std::string& tagnaem) const;
-	const Animations operator[](const std::string& tagname) const;
-
-	void start();
-	void stop();
-	void pause();
+	void setTimes(int times_);
+	int getTimes() const;
+	bool finish() const;
 	void restart();
+	void restart(int times);
+	void restart(const std::string& tag);
+	void restart(const std::string& tag, int times);
+	bool restartIfFinish(int times = 1);
+	bool restartIfFinish(const std::string& tag, int times = 1);
+	void pause();
+	void resume();
+	void stop();
+
+	void setFrameDuration(Duration d);
+	void setCurAnimFrameDuration(Duration d);
+	void setFrameDuration(const std::string& tag, Duration d);
+	void setAnimTime(Duration d);
+	void setCurAnimTime(Duration d);
+	void setAnimTime(const std::string& tag, Duration d);
+
+	Duration getFrameDuration() const;
+	Duration getFrameDuration(const std::string& tag) const;
+	Duration getAnimTime() const;
+	Duration getAnimTime(const std::string& tag) const;
 
 	void setAnim(const std::string& animName);
 	void setAnim(int i);
@@ -33,53 +50,41 @@ public:
 	void setAssociation(const std::vector<std::string>& assoc);
 	void setAssociation(const std::map<size_t, std::string>& assoc);
 
+	MySprite& operator[](size_t index);
+	const MySprite& at(size_t index)const;
+	const Animations operator[](const std::string& tagname) const;
+	const Animations getTegAnimation(const std::string& tagnaem) const;
+
+	virtual const int interact(const sf::Event& ev, const gm::Vector& pos = gm::NV) override;
+	virtual const int update() override;
+
+	virtual void draw(sf::RenderTarget& ren, sf::RenderStates states) const override;
+	void setColor(const sf::Color& color);
+
 	void scale(const gm::Vector& newScale) override;
 	void setScale(const gm::Vector& scale);
 	const gm::Vector getScale()const;
 
 	void setSize(const gm::Size& newSize) override;
 	virtual const gm::Vector getSize() const override;
+	const gm::Rectangle getLocalBounds() const override;
 
 	void setHorizontalSide(double side_);
 	void reverseHorizontalSide();
 	void setVerticalSide(double side_);
 	void reverseVerticalSide();
 
-	const gm::Rectangle getLocalBounds() const override;
-
 	void setOrigin(const gm::Vector& pos);
 	void setOrigin();
+	const gm::Coord getOrigin() const;
 
 	void rotate(gm::angle a);
 	void setRotation(const gm::angle a);
-
-	void setColor(const sf::Color& color);
-
-	// ������������ ����� BaseScreenObject
-	virtual void draw(sf::RenderTarget& ren, sf::RenderStates states) const override;
+	gm::angle getRotation() const;
 
 	virtual void move(const gm::Vector& off) override;
 	virtual const gm::Vector getPosition() const override;
 
-	virtual const int interact(const sf::Event& ev, const gm::Vector& pos = gm::NV) override;
-	virtual const int update() override;
-
-	void setTimes(int times_);
-	int getTimes() const;
-	bool finish() const;
-
-	void setFrameDuration(Duration d);
-	void setFrameDuration(const std::string& tag, Duration d);
-	void setAnimTime(Duration d);
-	void setAnimTime(const std::string& tag, Duration d);
-
-	Duration getFrameDuration() const;
-	Duration getFrameDuration(const std::string& tag) const;
-	Duration getAnimTime() const;
-	Duration getAnimTime(const std::string& tag) const;
-
-	MySprite& operator[](size_t index);
-	const MySprite& at(size_t index)const;
 protected:
 	class Tag {
 	public:
