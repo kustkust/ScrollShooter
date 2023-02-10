@@ -6,7 +6,7 @@ EnemyBullet::EnemyBullet(std::shared_ptr<Game> game, const gm::Coord& pos, const
 	normalOffset = dir.normal() * 0.2;
 	health = -1; // negative means immortal
 	collisionLayers.reset();
-	collisionLayers[2] = 1;
+	collisionLayers = PlayerVsEnemys | PlayersShieldVsEnemys | PlayerVsEnemysBullets;
 	auto center = hitbox->getCenter();
 	hitbox->setSize({ 4,4 });
 	hitbox->setCenter(pos);

@@ -9,6 +9,7 @@
 #include "StraigthEnemy.h"
 #include "BounceEnemy.h"
 #include "EnemyBullet.h"
+#include "CollisionLayers.h"
 
 Game::Game() :
 	bounds({ 0, 0 }, { 320, 480 }), curFrameTime{},
@@ -175,7 +176,8 @@ void Game::update() {
 
 		if (player.shieldHealth > 1) {
 			for (auto& enemy : enemys.collide(&player.shieldHitbox)) {
-				if (!enemy->toDelete && std::abs((enemy->hitbox->getCenter() - player.hitbox->getCenter()) ^ player.shieldDir) < gm::PI / 4) {
+				if ((enemy->collisionLayers & PlayersShieldVsEnemys).any() && !enemy->toDelete && 
+					std::abs((enemy->hitbox->getCenter() - player.hitbox->getCenter()) ^ player.shieldDir) < gm::PI / 4) {
 					enemy->toDelete = true;
 					player.shieldHealth -= 1;
 				}
@@ -183,8 +185,10 @@ void Game::update() {
 		}
 
 		for (auto& enemy : enemys.collide(player.hitbox.get())) {
-			if (!enemy->toDelete && enemy->hitbox->fastCollides(player.hitbox.get())) {
-				enemy->toDelete = true;
+			if ((enemy->collisionLayers & PlayerVsEnemys).any() && !enemy->toDelete && 
+				enemy->hitbox->fastCollides(player.hitbox.get())
+				) {
+				enemy->onCollideWithPlayer(gm::makeCollision<gm::PointsColl>(true));
 				player.takeDamage(1);
 				if (player.health <= 0) {
 					state = GameState::Loose;
@@ -194,7 +198,7 @@ void Game::update() {
 
 		for (auto& bonus : bonuses.collide(player.hitbox.get())) {
 			bonus->interact(player);
-			bonus->toDelete = true;
+			bonus->onCollideWithPlayer(gm::makeCollision<gm::PointsColl>(true));
 		}
 
 		for (auto& enemy : enemys) {

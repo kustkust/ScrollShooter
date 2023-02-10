@@ -149,6 +149,7 @@
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BounceEnemy.cpp" />
     <ClCompile Include="Bulet.cpp" />
+    <ClCompile Include="CollisionLayers.cpp" />
     <ClCompile Include="DMGBonus.cpp" />
     <ClCompile Include="DrawBaseElement.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Boss.h" />
     <ClInclude Include="BounceEnemy.h" />
     <ClInclude Include="Bulet.h" />
+    <ClInclude Include="CollisionLayers.h" />
     <ClInclude Include="DataStorage.h" />
     <ClInclude Include="DMGBonus.h" />
     <ClInclude Include="DrawBaseElement.h" />
@@ -206,6 +208,7 @@
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\README.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
