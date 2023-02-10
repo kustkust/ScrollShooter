@@ -9,6 +9,7 @@
 #include "StraigthEnemy.h"
 #include "BounceEnemy.h"
 #include "EnemyBullet.h"
+#include "Boss.h"
 #include "CollisionLayers.h"
 
 Game::Game() :
@@ -34,6 +35,8 @@ Game::Game() :
 
 void Game::init() {
 	player = Player(shared_from_this(), "Player", {});
+	bossSpawnTimer.restart(0s);
+	bossSpawned = false;
 	BaseScreenObject::defaultInterfaceClock->start();
 }
 
@@ -74,7 +77,7 @@ void Game::control() {
 			switch (event.key.code) {
 			case sf::Keyboard::F1:
 				showHitbox = !showHitbox;
-		}
+			}
 		}
 		switch (state) {
 		case GameState::Play:
@@ -166,7 +169,7 @@ void Game::update() {
 			enemy->update();
 		}
 		enemys.updateAll();
-		for (auto& bonus : bonuses.all()) {
+		for (auto& bonus : bonuses) {
 			bonus->update();
 		}
 		bonuses.updateAll();
@@ -177,6 +180,20 @@ void Game::update() {
 					std::abs((enemy->hitbox->getCenter() - player.hitbox->getCenter()) ^ player.shieldDir) < gm::PI / 4) {
 					enemy->toDelete = true;
 					player.shieldHealth -= 1;
+				} else if ((enemy->collisionLayers & PlayersShieldVsLaser).any()) {
+					auto l = enemy->as<Boss::LaserBeam>()->hitbox->as<gm::Sect>();
+					auto col = l->collides(player.shieldHitbox).getPoints();
+					if (col.empty()) continue;
+					gm::Coord p = col.front();
+					for (auto& cp : col) {
+						if (cp / l->p0 < p / l->p0) {
+							p = cp;
+						}
+					}
+					if (std::abs((p - player.hitbox->getCenter()) ^ player.shieldDir) < gm::PI / 4) {
+						l->p1 = p;
+						player.shieldHealth -= 1 * curFrameSec;
+					}
 				}
 			}
 		}
@@ -242,9 +259,11 @@ void Game::update() {
 				++it;
 			}
 		}
-
-		if (!spawnTimer.update()) {
-			spawnTimer.restart(duration(spawnDuratin(gen)));
+		if (bossSpawnTimer.finish() && !bossSpawned) {
+			Boss::makeBoss(shared_from_this());
+			bossSpawned = true;
+		} else if (false && !spawnTimer.update()) {
+			spawnTimer.restart(Duration(spawnDuratin(gen)));
 			auto x = spawnPoint(gen);
 			switch (enemyType(gen)) {
 			case 0:

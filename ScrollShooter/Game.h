@@ -30,6 +30,8 @@ public:
 	std::uniform_int_distribution<int> enemyType{ 0, 2 };
 	std::uniform_int_distribution<int> bonusType{ 0, 10 };
 	BackTimer spawnTimer{};
+	BackTimer bossSpawnTimer{};
+	bool bossSpawned = false;
 
 	gm::Coord mousePos;
 
