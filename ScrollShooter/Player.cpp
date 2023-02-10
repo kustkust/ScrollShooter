@@ -27,6 +27,7 @@ void Player::init() {
 	anim.restart();
 	shieldAnimation.setOrigin({ shieldAnimation.getWidth() / 2, shieldAnimation.getHeight() });
 	shieldHitbox.setSize({ 64., 64. });
+	shieldAnimation.restart();
 }
 
 void Player::control(const sf::Event& e) {
