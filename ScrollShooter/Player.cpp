@@ -128,6 +128,6 @@ void Player::update() {
 		firstShoot = false;
 		shootTimer.restart(shootDuration);
 		// shootSound.play();
-		game->pushBackBullet<Bullet>(hitbox->getCenter() - 20 * gm::VY, 0.5, *dmg);
+		game->pushBackBullet<Bullet>(hitbox->getCenter().addY(-20), 0.5, *dmg);
 	}
 }
