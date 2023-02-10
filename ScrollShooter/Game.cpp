@@ -220,12 +220,13 @@ void Game::update() {
 				enemy->toDelete = true;
 			}
 			if (enemy->toDelete) continue;
+			if (!(enemy->collisionLayers & PlayersBulletsVsEnemys).any()) continue;
 			for (auto& bullet : bullets.collide(enemy->hitbox.get())) {
 				if (bullet->hitbox->outside(bounds)) {
 					bullet->toDelete = true;
 				}
 				if (bullet->toDelete) continue;
-				if (bullet->collide(enemy.get()) && bullet->hitbox->fastCollides(enemy->hitbox.get())) {
+  				if (bullet->collide(enemy.get()) && bullet->hitbox->fastCollides(enemy->hitbox.get())) {
 					enemy->takeDamage(bullet->dmg);
 					if (enemy->toDelete) {
 						player.score += enemy->getScore();
