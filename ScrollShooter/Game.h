@@ -56,6 +56,18 @@ public:
 	void update();
 
 	template<class T, class... Args>
+	BaseObject* pushBackObj(Args... args) {
+		auto tmp = new T(shared_from_this(), args...);
+		if (auto enemy = tmp->as<Enemy>()) {
+			return (*enemys.pushBack(std::unique_ptr<Enemy>(enemy)))->as<BaseObject>();
+		} else if (auto bullet = tmp->as<Bullet>()) {
+			return (*bullets.pushBack(std::unique_ptr<Bullet>(bullet)))->as<BaseObject>();
+		} else if (auto bonus = tmp->as<Bonus>()) {
+			return (*bonuses.pushBack(std::unique_ptr<Bonus>(bonus)))->as<BaseObject>();
+		}
+	}
+
+	template<class T, class... Args>
 	decltype(auto) pushBackEnemy(Args... args) {
 		return enemys.pushBack(std::make_unique<T>(shared_from_this(), args...));
 	}
