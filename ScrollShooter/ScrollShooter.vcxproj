@@ -178,6 +178,7 @@ xcopy "$(ProjectDir)*.wav" "$(SolutionDir)$(Platform)\$(Configuration)\" /s /Y</
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="SinusEnemy.cpp" />
+    <ClCompile Include="Speed.cpp" />
     <ClCompile Include="SpeedBonus.cpp" />
     <ClCompile Include="SpriteContainer.cpp" />
     <ClCompile Include="DataStorage.cpp" />
@@ -211,6 +212,7 @@ xcopy "$(ProjectDir)*.wav" "$(SolutionDir)$(Platform)\$(Configuration)\" /s /Y</
     <ClInclude Include="Player.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="SinusEnemy.h" />
+    <ClInclude Include="Speed.h" />
     <ClInclude Include="SpeedBonus.h" />
     <ClInclude Include="SpriteContainer.h" />
     <ClInclude Include="StraigthEnemy.h" />

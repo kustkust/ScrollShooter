@@ -114,6 +114,9 @@
     <ClCompile Include="CollisionLayers.cpp">
       <Filter>Source\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Speed.cpp">
+      <Filter>Source\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -204,6 +207,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="CollisionLayers.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Speed.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
