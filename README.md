@@ -14,3 +14,4 @@
 - May be add `C#`-like `Event`
 - May be remove `std::shared_ptr<Game>` from `BaseObject` constructor
 - ~~Add `collideIf` for `QuadTree`~~
+- May be replace `BaseObject::toDelete` with `Game::toDeleteList`
