@@ -40,6 +40,7 @@ private:
 public:
 	class Iterator /* :public std::iterator<std::random_access_iterator_tag, T>*/ {
 		friend QuadTree;
+		friend class RepIterator;
 		NodeItem iter;
 		Iterator(NodeItem item) :iter(item) {
 
@@ -252,6 +253,83 @@ private:
 	// std::ranges::transform_view<std::ranges::ref_view<Item>, std::function<T& (Item&)>> rep;
 
 public:
+
+	class RepIterator {
+		friend QuadTree;
+		friend class QuadTreeRep;
+		NodeItems::iterator iter;
+		RepIterator(NodeItems::iterator item) :iter(item) {
+
+		}
+		Iterator toIter() const {
+			return Iterator(*iter);
+		}
+	public:
+		using iterator_category = std::list<Item>::iterator::iterator_category;
+		using value_type = T;
+		using difference_type = std::list<Item>::iterator::difference_type;
+		using pointer = std::list<Item>::iterator::pointer;
+		using reference = std::list<Item>::iterator::reference;
+
+		DEFAULT_CLASS(RepIterator);
+		bool operator==(const RepIterator& other) const {
+			return iter == other.iter;
+		}
+		bool operator!=(const RepIterator& other) const {
+			return iter != other.iter;
+		}
+		T& operator*() {
+			return ***iter;
+		}
+		const T& operator*() const {
+			return ***iter;
+		}
+		T* operator->() {
+			return &***iter;
+		}
+		const T* operator->() const {
+			return &***iter;
+		}
+		RepIterator& operator++() {
+			++iter;
+			return *this;
+		}
+		RepIterator operator++(int) {
+			RepIterator tmp = *this;
+			iter++;
+			return tmp;
+		}
+		RepIterator& operator--() {
+			--iter;
+			return *this;
+		}
+		RepIterator operator--(int) {
+			RepIterator tmp = *this;
+			iter--;
+			return tmp;
+		}
+
+	};
+
+	class QuadTreeRep {
+		friend QuadTree;
+		NodeItems list;
+		QuadTreeRep(NodeItems&& list) : list(std::forward<NodeItems>(list)) {
+
+		}
+	public:
+		DEFAULT_CLASS(QuadTreeRep);
+
+		RepIterator begin() {
+			return RepIterator(list.begin());
+		}
+
+		RepIterator end() {
+			return RepIterator(list.end());
+		}
+	};
+
+public:
 	QuadTree() = default;
 	QuadTree(
 		const gm::Rectangle& bounds,
@@ -315,11 +393,21 @@ public:
 		return res;
 	}
 
+	Iterator erase(RepIterator item) {
+		(*item.iter)->nodeList->erase((*item.iter)->it);
+		auto res = items.erase((*item.iter));
+		return res;
+	}
+
 	void update(Iterator item) {
 		item.iter->nodeList->erase(item.iter->it);
 		auto [list, it] = root.insert(item.iter, getBounds(item.iter->item));
 		item.iter->nodeList = list;
 		item.iter->it = it;
+	}
+
+	void update(RepIterator item) {
+		update(item.toIter());
 	}
 
 	void updateAll() {
@@ -334,10 +422,22 @@ public:
 		return std::views::transform(tmpList, transformNodeItem);
 	}
 
+	decltype(auto) contains_(gm::IShape* bounds) {
+		NodeItems tmp;
+		root.contains(tmp, bounds, getBounds);
+		return QuadTreeRep(std::move(tmp));
+	}
+
 	decltype(auto) collide(gm::IShape* bounds) {
 		tmpList.clear();
 		root.collides(tmpList, bounds, getBounds);
 		return std::views::transform(tmpList, transformNodeItem);
+	}
+
+	decltype(auto) collide_(gm::IShape* bounds) {
+		NodeItems tmp;
+		root.collides(tmp, bounds, getBounds);
+		return QuadTreeRep(std::move(tmp));
 	}
 
 	void clear() {

@@ -263,7 +263,7 @@ void Game::update() {
 		if (bossSpawnTimer.finish() && !bossSpawned) {
 			Boss::makeBoss(shared_from_this());
 			bossSpawned = true;
-		} else if (false && !spawnTimer.update()) {
+		} else if (!spawnTimer.update()) {
 			spawnTimer.restart(Duration(spawnDuratin(gen)));
 			auto x = spawnPoint(gen);
 			switch (enemyType(gen)) {
