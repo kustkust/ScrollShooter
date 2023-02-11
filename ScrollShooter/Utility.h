@@ -225,3 +225,10 @@ void removeByInd(std::vector<T>& cont, IndT& ind) {
 gm::Rectangle jsonRect(json& jrect);
 gm::Vector jsonVector(json& vec);
 gm::Vector jsonSize(json& size);
+
+#define DEFAULT_CLASS(name) \
+	name() = default; \
+	name(name&&) = default; \
+	name(const name&) = default; \
+	name& operator=(name&&) = default; \
+	name& operator=(const name&) = default;
