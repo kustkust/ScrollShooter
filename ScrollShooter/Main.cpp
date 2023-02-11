@@ -11,23 +11,26 @@ void testQuadTree() {
 		std::cin >> cmd;
 		if (cmd == "i") {
 			std::cin >> x >> y >> w >> h;
-			tree.emplace(gm::Rectangle(x, y, w, h));
+			tree.pushBack(Test(gm::Rectangle(x, y, w, h)));
 		} else if (cmd == "l") {
 			i = 0;
-			for (auto& rect : tree) {
+			/*for (auto& rect : tree) {
 				std::cout << i++ << ":" << rect.rect.getPosition() << " " << rect.rect.getSize() << "\n";
+			}*/
+			for (auto it = tree.begin(); it != tree.end(); ++it) {
+				std::cout << i++ << ":" << it->rect.getPosition() << " " << it->rect.getSize() << "\n";
 			}
 		} else if (cmd == "r") {
 			std::cin >> i; 
-			auto b = tree.origBegin();
+			auto b = tree.begin();
 			std::advance(b, i);
 			tree.erase(b);
 		} else if (cmd == "m") {
 			std::cin >> i;
 			std::cin >> x >> y >> w >> h;
-			auto b = tree.origBegin();
+			auto b = tree.begin();
 			std::advance(b, i);
-			b->item.rect = { x,y,w,h };
+			b->rect = { x,y,w,h };
 			tree.update(b);
 		} else if (cmd == "cont") {
 			std::cin >> x >> y >> w >> h;

@@ -236,25 +236,25 @@ void Game::update() {
 				}
 			}
 		}
-		for (auto it = enemys.origBegin(); it != enemys.origEnd();) {
-			if (it->item->toDelete) {
-				it->item->onDeleting();
+		for (auto it = enemys.begin(); it != enemys.end();) {
+			if ((*it)->toDelete) {
+				(*it)->onDeleting();
 				it = enemys.erase(it);
 			} else {
 				++it;
 			}
 		}
-		for (auto it = bullets.origBegin(); it != bullets.origEnd();) {
-			if (it->item->toDelete) {
-				it->item->onDeleting();
+		for (auto it = bullets.begin(); it != bullets.end();) {
+			if ((*it)->toDelete) {
+				(*it)->onDeleting();
 				it = bullets.erase(it);
 			} else {
 				++it;
 			}
 		}
-		for (auto it = bonuses.origBegin(); it != bonuses.origEnd();) {
-			if (it->item->toDelete) {
-				it->item->onDeleting();
+		for (auto it = bonuses.begin(); it != bonuses.end();) {
+			if ((*it)->toDelete) {
+				(*it)->onDeleting();
 				it = bonuses.erase(it);
 			} else {
 				++it;

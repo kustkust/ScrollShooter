@@ -14,19 +14,19 @@ Boss::Boss(std::shared_ptr<Game> game) :
 
 void Boss::makeBoss(std::shared_ptr<Game> game) {
 	// auto b = dynamic_cast<Boss*>(game->pushBackEnemy<Boss>()->item.get());
-	auto b = dynamic_cast<Boss*>(game->enemys.pushBack(std::unique_ptr<Boss>(new Boss(game)))->item.get());
+	auto b = dynamic_cast<Boss*>(game->enemys.pushBack(std::unique_ptr<Boss>(new Boss(game)))->get());
 
-	b->comp[b->leftLaser] = dynamic_cast<Laser*>(game->pushBackEnemy<Laser>(b, gm::NV)->item.get());
+	b->comp[b->leftLaser] = dynamic_cast<Laser*>(game->pushBackEnemy<Laser>(b, gm::NV)->get());
 	b->comp[b->leftLaser]->hitbox->setCenter(b->hitbox->getLeftTop().add(21, 34));
 	b->comp[0] = b->comp[b->leftLaser];
-	b->comp[b->rightLaser] = dynamic_cast<Laser*>(game->pushBackEnemy<Laser>(b, gm::NV)->item.get());
+	b->comp[b->rightLaser] = dynamic_cast<Laser*>(game->pushBackEnemy<Laser>(b, gm::NV)->get());
 	b->comp[b->rightLaser]->hitbox->setCenter(b->hitbox->getLeftTop().add(107, 34));
 	b->comp[1] = b->comp[b->rightLaser];
 
-	b->comp[b->leftCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, "BossCannonV2Left", gm::NV)->item.get());
+	b->comp[b->leftCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, "BossCannonV2Left", gm::NV)->get());
 	b->comp[b->leftCannon]->hitbox->setRightTop(b->hitbox->getTopCenter().addY(32));
 	b->comp[2] = b->comp[b->leftCannon];
-	b->comp[b->rightCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, "BossCannonV2Right", gm::NV)->item.get());
+	b->comp[b->rightCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, "BossCannonV2Right", gm::NV)->get());
 	b->comp[b->rightCannon]->hitbox->setLeftTop(b->hitbox->getTopCenter().addY(32));
 	b->comp[3] = b->comp[b->rightCannon];
 
@@ -116,7 +116,11 @@ void Boss::Laser::update() {
 		anim.setRotation(gm::VY ^ dir);
 		if (anim.restartIfFinish("shoot")) {
 			state = Shoot;
-			laser = game->pushBackEnemy<Boss::LaserBeam>(hitbox->getCenter() + dir(30), dir, anim.getAnimTime("shoot"))->item->as<Boss::LaserBeam>();
+			laser = (*game->pushBackEnemy<LaserBeam>(
+				hitbox->getCenter() + dir(30), 
+				dir, 
+				anim.getAnimTime("shoot"))
+				)->as<LaserBeam>();
 		}
 		break;
 	}

@@ -1,5 +1,6 @@
 #pragma once
 #include "Rectangle.h"
+#include "Utility.h"
 
 struct Test {
 	Test() = default;
@@ -13,9 +14,11 @@ struct Test {
 		return rect;
 	}
 };
-
-// using T = Test;
+#if 0
+using T = Test;
+#else
 template<class T>
+#endif
 class QuadTree {
 public:
 
@@ -26,14 +29,69 @@ public:
 	*/
 
 	using GetBounds = std::function<gm::Rectangle(const T&)>;
-private:
 
+private:
 	class Node;
 	struct Item;
 	using Items = std::list<Item>;
 	using NodeItem = Items::iterator;
 	using NodeItems = std::list<NodeItem>;
 
+public:
+	class Iterator /* :public std::iterator<std::random_access_iterator_tag, T>*/ {
+		friend QuadTree;
+		NodeItem iter;
+		Iterator(NodeItem item) :iter(item) {
+
+		}
+	public:
+		using iterator_category = std::list<Item>::iterator::iterator_category;
+		using value_type = T;
+		using difference_type = std::list<Item>::iterator::difference_type;
+		using pointer = std::list<Item>::iterator::pointer;
+		using reference = std::list<Item>::iterator::reference;
+
+		DEFAULT_CLASS(Iterator);
+		bool operator==(const Iterator& other) const {
+			return iter == other.iter;
+		}
+		bool operator!=(const Iterator& other) const {
+			return iter != other.iter;
+		}
+		T& operator*() {
+			return **iter;
+		}
+		const T& operator*() const {
+			return **iter;
+		}
+		T* operator->() {
+			return &**iter;
+		}
+		const T* operator->() const {
+			return &**iter;
+		}
+		Iterator& operator++() {
+			++iter;
+			return *this;
+		}
+		Iterator operator++(int) {
+			Iterator tmp = *this;
+			iter++;
+			return tmp;
+		}
+		Iterator& operator--() {
+			--iter;
+			return *this;
+		}
+		Iterator operator--(int) {
+			Iterator tmp = *this;
+			iter--;
+			return tmp;
+		}
+
+	};
+
+private:
 	struct Item {
 	public:
 		T* operator->() {
@@ -148,9 +206,9 @@ private:
 			}
 			return children[ind]->insert(item, bounds);
 		}
-		void contains(std::list<NodeItem>& result, gm::IShape* bounds, const GetBounds& getBounds) const {
+		void contains(std::list<NodeItem>& result, const gm::IShape* bounds, const GetBounds& getBounds) const {
 			for (auto& it : items) {
-				if (bounds->fastCollides(getBounds(it->item))) {
+				if (getBounds(it->item).inside(bounds)) {
 					result.push_back(it);
 				}
 			}
@@ -164,7 +222,7 @@ private:
 		void collides(NodeItems& result, gm::IShape* bounds, const GetBounds& getBounds) const {
 			for (auto& it : items) {
 				if (bounds->collides(getBounds(it->item))) {
- 					result.push_back(it);
+					result.push_back(it);
 				}
 			}
 			for (auto& child : children) {
@@ -189,10 +247,9 @@ private:
 	Items items;
 	GetBounds getBounds;
 	mutable NodeItems tmpList;
-	std::function<T&(Item&)> transformItem = [](Item& item) ->T& { return *item; };
-	std::function<T&(NodeItem&)> transformNodeItem = [](NodeItem& item) ->T& { return **item; };
+
+	std::function<T& (NodeItem&)> transformNodeItem = [](NodeItem& item) ->T& { return **item; };
 	// std::ranges::transform_view<std::ranges::ref_view<Item>, std::function<T& (Item&)>> rep;
-	std::ranges::transform_view<std::ranges::ref_view<Items>, std::function<T& (Item&)>> rep{ items, transformItem };
 
 public:
 	QuadTree() = default;
@@ -211,58 +268,58 @@ public:
 
 	}
 
-	NodeItem pushBack(const T& item) {
+	Iterator pushBack(const T& item) {
 		items.push_back(item);
 		auto [list, it] = root.insert(--items.end(), getBounds(items.back().item));
 		items.back().nodeList = list;
 		items.back().it = it;
-		return --items.end();
+		return Iterator(--items.end());
 	}
 
-	NodeItem pushBack(T&& item) {
+	Iterator pushBack(T&& item) {
 		items.emplace_back(std::forward<T>(item));
 		auto [list, it] = root.insert(--items.end(), getBounds(items.back().item));
 		items.back().nodeList = list;
 		items.back().it = it;
-		return --items.end();
+		return Iterator(--items.end());
 	}
 
-	NodeItem pushFront(const T& item) {
+	Iterator pushFront(const T& item) {
 		items.push_front(item);
 		auto [list, it] = root.insert(items.begin(), getBounds(items.front().item));
 		items.front().nodeList = list;
 		items.front().it = it;
-		return items.begin();
+		return Iterator(items.begin());
 	}
 
-	NodeItem pushFront(T&& item) {
+	Iterator pushFront(T&& item) {
 		items.emplace_front(std::forward<T>(item));
 		auto [list, it] = root.insert(items.begin(), getBounds(items.front().item));
 		items.front().nodeList = list;
 		items.front().it = it;
-		return items.begin();
+		return Iterator(items.begin());
 	}
 
 	template<class... Args>
-	NodeItem emplace(Args... args) {
+	Iterator emplaceBack(Args... args) {
 		items.emplace_back(args...);
 		auto [list, it] = root.insert(--items.end(), getBounds(items.back().item));
 		items.back().nodeList = list;
 		items.back().it = it;
-		return --items.end();
+		return Iterator(items.begin());
 	}
 
-	NodeItem erase(NodeItem item) {
-		item->nodeList->erase(item->it);
-		auto res = items.erase(item);
+	Iterator erase(Iterator item) {
+		item.iter->nodeList->erase(item.iter->it);
+		auto res = items.erase(item.iter);
 		return res;
 	}
 
-	void update(NodeItem item) {
-		item->nodeList->erase(item->it);
-		auto [list, it] = root.insert(item, getBounds(item->item));
-		item->nodeList = list;
-		item->it = it;
+	void update(Iterator item) {
+		item.iter->nodeList->erase(item.iter->it);
+		auto [list, it] = root.insert(item.iter, getBounds(item.iter->item));
+		item.iter->nodeList = list;
+		item.iter->it = it;
 	}
 
 	void updateAll() {
@@ -283,28 +340,16 @@ public:
 		return std::views::transform(tmpList, transformNodeItem);
 	}
 
-	decltype(auto) all() {
-		return std::views::transform(items, transformItem);
-	}
-
 	void clear() {
 		items.clear();
 		root.clear();
 	}
 
-	decltype(auto) begin() {
-		return rep.begin();
-	}
-
-	decltype(auto) end() {
-		return rep.end();
-	}
-
-	decltype(auto) origBegin() {
+	Iterator begin() {
 		return items.begin();
 	}
 
-	decltype(auto) origEnd() {
+	Iterator end() {
 		return items.end();
 	}
 
