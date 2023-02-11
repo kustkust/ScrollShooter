@@ -4,7 +4,7 @@
 - Add separate class for move
 - Add separate class for spawn enemies
 - ~~Add iterators to `QuadTree`~~
-- Add speed and acceleration classes
+- ~~Add speed classes~~
 - Add snake-like boss
 - May be add paddings support for `MySpryte`
 - May be add `IBackTimer` for `BackTimer` and `Animations`

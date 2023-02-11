@@ -12,9 +12,11 @@ public:
 	Speed(gm::real speed) :speed(speed) {}
 	Speed(int speed) :speed(static_cast<gm::real>(speed)) {}
 
-	template<class T>
-	gm::real operator*(std::chrono::duration<T> dur) const {
-		return (speed * std::chrono::duration_cast<Duration>(dur).count()) / 1000;
+	gm::real operator*(std::chrono::milliseconds dur) const {
+		return speed * dur.count() / 1000;
+	}
+	gm::real operator*(std::chrono::seconds dur) const {
+		return speed * dur.count();
 	}
 
 	Speed operator*(gm::real a) const {
@@ -58,10 +60,10 @@ public:
 	}
 };
 
-Speed operator""ps(long double s) {
+Speed operator""_ps(long double s) {
 	return Speed(static_cast<gm::real>(s));
 }
 
-Speed operator""ps(unsigned long long int s) {
+Speed operator""_ps(unsigned long long int s) {
 	return Speed(static_cast<gm::real>(s));
 }
