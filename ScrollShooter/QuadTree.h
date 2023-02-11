@@ -14,6 +14,7 @@ struct Test {
 		return rect;
 	}
 };
+
 #if 0
 using T = Test;
 #else
@@ -195,7 +196,6 @@ private:
 			return children[ind]->insert(item, bounds, list, newAfter);
 		}
 
-
 		std::pair<NodeItems*, typename NodeItems::iterator> insert(NodeItem item, gm::Rectangle bounds) {
 			auto ind = getContainIndex(bounds);
 			if (ind == 4 || depth == maxDepth) {
@@ -207,6 +207,7 @@ private:
 			}
 			return children[ind]->insert(item, bounds);
 		}
+
 		void contains(std::list<NodeItem>& result, const gm::IShape* bounds, const GetBounds& getBounds) const {
 			for (auto& it : items) {
 				if (getBounds(it->item).inside(bounds)) {
@@ -220,6 +221,19 @@ private:
 			}
 		}
 
+		void containsIf(std::list<NodeItem>& result, const gm::IShape* bounds, const GetBounds& getBounds, const std::function<bool(const T&)>& cond) const {
+			for (auto& it : items) {
+				if (cond(it->item) && getBounds(it->item).inside(bounds)) {
+					result.push_back(it);
+				}
+			}
+			for (auto& child : children) {
+				if (child && bounds->collides(child->bounds)) {
+					child->containsIf(result, bounds, getBounds, cond);
+				}
+			}
+		}
+
 		void collides(NodeItems& result, gm::IShape* bounds, const GetBounds& getBounds) const {
 			for (auto& it : items) {
 				if (bounds->collides(getBounds(it->item))) {
@@ -229,6 +243,19 @@ private:
 			for (auto& child : children) {
 				if (child && bounds->collides(child->bounds)) {
 					child->collides(result, bounds, getBounds);
+				}
+			}
+		}
+
+		void collidesIf(NodeItems& result, gm::IShape* bounds, const GetBounds& getBounds, const std::function<bool(const T&)>& cond) const {
+			for (auto& it : items) {
+				if (cond(it->item) && bounds->collides(getBounds(it->item))) {
+					result.push_back(it);
+				}
+			}
+			for (auto& child : children) {
+				if (child && bounds->collides(child->bounds)) {
+					child->collidesIf(result, bounds, getBounds, cond);
 				}
 			}
 		}
@@ -247,10 +274,6 @@ private:
 	Node root;
 	Items items;
 	GetBounds getBounds;
-	mutable NodeItems tmpList;
-
-	std::function<T& (NodeItem&)> transformNodeItem = [](NodeItem& item) ->T& { return **item; };
-	// std::ranges::transform_view<std::ranges::ref_view<Item>, std::function<T& (Item&)>> rep;
 
 public:
 
@@ -416,27 +439,35 @@ public:
 		}
 	}
 
-	decltype(auto) contains(gm::IShape* bounds) {
-		tmpList.clear();
-		root.contains(tmpList, bounds, getBounds);
-		return std::views::transform(tmpList, transformNodeItem);
+	void updateIf(const std::function<bool(const T&)>& cond) {
+		for (auto it = items.begin(); it != items.end(); ++it) {
+			if (cond(it->item)) {
+				update(it);
+			}
+		}
 	}
 
-	decltype(auto) contains_(gm::IShape* bounds) {
+	decltype(auto) contains(gm::IShape* bounds) {
 		NodeItems tmp;
 		root.contains(tmp, bounds, getBounds);
 		return QuadTreeRep(std::move(tmp));
 	}
 
-	decltype(auto) collide(gm::IShape* bounds) {
-		tmpList.clear();
-		root.collides(tmpList, bounds, getBounds);
-		return std::views::transform(tmpList, transformNodeItem);
+	decltype(auto) containsIf(gm::IShape* bounds, const std::function<bool(const T&)>& cond) {
+		NodeItems tmp;
+		root.containsIf(tmp, bounds, getBounds, cond);
+		return QuadTreeRep(std::move(tmp));
 	}
 
-	decltype(auto) collide_(gm::IShape* bounds) {
+	decltype(auto) collide(gm::IShape* bounds) {
 		NodeItems tmp;
 		root.collides(tmp, bounds, getBounds);
+		return QuadTreeRep(std::move(tmp));
+	}
+
+	decltype(auto) collideIf(gm::IShape* bounds, const std::function<bool(const T&)>&cond) {
+		NodeItems tmp;
+		root.collidesIf(tmp, bounds, getBounds, cond);
 		return QuadTreeRep(std::move(tmp));
 	}
 

@@ -28,7 +28,7 @@ void testQuadTree() {
 		} else if (cmd == "rf") {
 			std::cin >> x >> y >> w >> h;
 			gm::Rectangle rect{ x,y,w,h };
-			tree.erase(tree.contains_(&rect).begin());
+			tree.erase(tree.contains(&rect).begin());
 		} else if (cmd == "m") {
 			std::cin >> i;
 			std::cin >> x >> y >> w >> h;
