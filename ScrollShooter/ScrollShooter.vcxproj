@@ -117,6 +117,11 @@
       <AdditionalLibraryDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\lib;C:\Users\kust\Programming\C++\Progects\Geometry\x64\bin\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;Geometry.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)*.png" "$(SolutionDir)$(Platform)\$(Configuration)\" /s /Y
+xcopy "$(ProjectDir)*.json" "$(SolutionDir)$(Platform)\$(Configuration)\" /s /Y
+xcopy "$(ProjectDir)*.wav" "$(SolutionDir)$(Platform)\$(Configuration)\" /s /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -139,6 +144,11 @@
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-main.lib;sfml-audio.lib;Geometry.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(USERPROFILE)\Programming\C++\SFML\dynamic\2.5.1\x64\lib;C:\Users\kust\Programming\C++\Progects\Geometry\x64\bin\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)*.png" "$(SolutionDir)$(Platform)\$(Configuration)\" /s /Y
+xcopy "$(ProjectDir)*.json" "$(SolutionDir)$(Platform)\$(Configuration)\" /s /Y
+xcopy "$(ProjectDir)*.wav" "$(SolutionDir)$(Platform)\$(Configuration)\" /s /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
