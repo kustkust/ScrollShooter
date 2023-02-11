@@ -181,22 +181,14 @@ void Game::update() {
 					enemy->toDelete = true;
 					player.shieldHealth -= 1;
 				} else if ((enemy->collisionLayers & PlayersShieldVsLaser).any()) {
-					auto l = enemy->as<Boss::LaserBeam>()->hitbox->as<gm::Sect>();
-					auto col = l->collides(player.shieldHitbox).getPoints();
-					if (col.empty()) continue;
-					gm::Coord p = col.front();
-					for (auto& cp : col) {
-						if (cp / l->p0 < p / l->p0) {
-							p = cp;
+					auto col = enemy->hitbox->collides(player.shieldHitbox);
+					if (!col.getPoints().empty()) {
+						enemy->onCollideWithPlayer(col);
 						}
-					}
-					if (std::abs((p - player.hitbox->getCenter()) ^ player.shieldDir) < gm::PI / 4) {
-						l->p1 = p;
-						player.shieldHealth -= 1 * curFrameSec;
+
 					}
 				}
 			}
-		}
 
 		for (auto& enemy : enemys.collide(player.hitbox.get())) {
 			if ((enemy->collisionLayers & PlayerVsEnemys).any() && !enemy->toDelete && 

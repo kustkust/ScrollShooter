@@ -182,8 +182,20 @@ void Boss::LaserBeam::update() {
 	}
 }
 
-void Boss::LaserBeam::onCollideWithPlayer(const gm::Collision&) {
-
+void Boss::LaserBeam::onCollideWithPlayer(const gm::Collision& coll) {
+	auto col = coll.getPoints();
+	if (col.empty()) return;
+	auto l = hitbox->as<gm::Sect>();
+	gm::Coord p = col.front();
+	for (auto& cp : col) {
+		if (cp / l->p0 < p / l->p0) {
+			p = cp;
+		}
+	}
+	if (std::abs((p - game->player.hitbox->getCenter()) ^ game->player.shieldDir) < gm::PI / 4) {
+		l->p1 = p;
+		game->player.shieldHealth -= 1 * game->curFrameSec;
+	}
 }
 
 bool Boss::LaserBeam::onDeleting() {
