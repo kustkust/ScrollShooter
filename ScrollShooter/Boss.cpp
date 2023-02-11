@@ -15,7 +15,7 @@ Boss::Boss(std::shared_ptr<Game> game) :
 void Boss::makeBoss(std::shared_ptr<Game> game) {
 	// auto b = dynamic_cast<Boss*>(game->pushBackEnemy<Boss>()->item.get());
 	auto b = dynamic_cast<Boss*>(game->enemys.pushBack(std::unique_ptr<Boss>(new Boss(game)))->get());
-
+	/*
 	b->comp[b->leftLaser] = dynamic_cast<Laser*>(game->pushBackEnemy<Laser>(b, gm::NV)->get());
 	b->comp[b->leftLaser]->hitbox->setCenter(b->hitbox->getLeftTop().add(21, 34));
 	b->comp[0] = b->comp[b->leftLaser];
@@ -29,8 +29,19 @@ void Boss::makeBoss(std::shared_ptr<Game> game) {
 	b->comp[b->rightCannon] = dynamic_cast<Cannon*>(game->pushBackEnemy<Cannon>(b, "BossCannonV2Right", gm::NV)->get());
 	b->comp[b->rightCannon]->hitbox->setLeftTop(b->hitbox->getTopCenter().addY(32));
 	b->comp[3] = b->comp[b->rightCannon];
+	*/
 
-	for (auto c : b->comp) {
+	b->leftLaser = b->born<Laser>(gm::NV);
+	(*b->leftLaser)->hitbox->setCenter(b->hitbox->getLeftTop().add(21, 34));
+	b->rightLaser = b->born<Laser>(gm::NV);
+	(*b->rightLaser)->hitbox->setCenter(b->hitbox->getLeftTop().add(107, 34));
+
+	b->leftCannon = b->born<Cannon>("BossCannonV2Left", gm::NV);
+	(*b->leftCannon)->hitbox->setRightTop(b->hitbox->getTopCenter().addY(32));
+	b->rightCannon = b->born<Cannon>("BossCannonV2Right", gm::NV);
+	(*b->rightCannon)->hitbox->setLeftTop(b->hitbox->getTopCenter().addY(32));
+
+	for (auto c : b->children) {
 		c->normalOffset = b->normalOffset;
 	}
 }
@@ -42,7 +53,7 @@ void Boss::update() {
 	} else if (hitbox->getRight() >= game->bounds.getRight()) {
 		normalOffset.x = -std::abs(normalOffset.x);
 	}
-	for (auto c : comp) {
+	for (auto c : children) {
 		if (c) {
 			c->normalOffset = normalOffset;
 		}
@@ -50,7 +61,7 @@ void Boss::update() {
 }
 
 bool Boss::onDeleting() {
-	for (auto c : comp) {
+	for (auto c : children) {
 		if (c) {
 			c->toDelete = true;
 		}
@@ -58,21 +69,22 @@ bool Boss::onDeleting() {
 	return true;
 }
 
-void Boss::onChiledDeleting(Enemy* child) {
-	if (!std::ranges::any_of(comp, [](auto ch) { return ch; })) {
+void Boss::onChildDeleting(Children::iterator child) {
+	BaseObject::onChildDeleting(child);
+	if (!std::ranges::any_of(children, [](auto ch) { return ch; })) {
 		collisionLayers |= PlayersBulletsVsEnemys;
 	}
 }
 
 void Boss::takeDamage(int dmg) {
-	if (std::ranges::any_of(comp, [](auto p) { return p; })) {
+	if (std::ranges::any_of(children, [](auto p) { return p; })) {
 		dmg = 0;
 	}
 	Enemy::takeDamage(dmg);
 }
 
-Boss::Cannon::Cannon(std::shared_ptr<Game> game, Boss* b, const std::string& animName, const gm::Coord& pos) :
-	Enemy(game, animName, pos), b(b) {
+Boss::Cannon::Cannon(std::shared_ptr<Game> game, const std::string& animName, const gm::Coord& pos) :
+	Enemy(game, animName, pos) {
 	anim.setTimes(1);
 	health = 10;
 }
@@ -80,24 +92,13 @@ Boss::Cannon::Cannon(std::shared_ptr<Game> game, Boss* b, const std::string& ani
 void Boss::Cannon::update() {
 	Enemy::update();
 	if (anim.restartIfFinish(1)) {
-		game->pushBackEnemy<EnemyBullet>(hitbox->getTopCenter().addY(12), gm::VY);
+		// game->pushBackEnemy<EnemyBullet>(hitbox->getTopCenter().addY(12), gm::VY);
 	}
 }
 
-bool Boss::Cannon::onDeleting() {
-	if (b->comp[b->leftCannon] == this) {
-		b->comp[b->leftCannon] = nullptr;
-		b->onChiledDeleting(this);
-	} else if (b->comp[b->rightCannon] == this) {
-		b->comp[b->rightCannon] = nullptr;
-		b->onChiledDeleting(this);
-	}
-	return true;
-}
-
-Boss::Laser::Laser(std::shared_ptr<Game> game, Boss* b, const gm::Coord& pos) :
+Boss::Laser::Laser(std::shared_ptr<Game> game, const gm::Coord& pos) :
 	Enemy(game, "BossLaser", pos),
-	b(b), rotateSpeed(gm::PI/360), dir(gm::VY), state(Aim) {
+	rotateSpeed(gm::PI/360), dir(gm::VY), state(Aim) {
 	anim.setAnim("aim");
 	anim.setOrigin({ 16, 10 });
 	anim.setAnimTime("aim", 5s);
@@ -116,11 +117,9 @@ void Boss::Laser::update() {
 		anim.setRotation(gm::VY ^ dir);
 		if (anim.restartIfFinish("shoot")) {
 			state = Shoot;
-			laser = (*game->pushBackEnemy<LaserBeam>(
-				hitbox->getCenter() + dir(30), 
-				dir, 
-				anim.getAnimTime("shoot"))
-				)->as<LaserBeam>();
+			born<LaserBeam>(hitbox->getCenter() + dir(30),
+				dir,
+				anim.getAnimTime("shoot"));
 		}
 		break;
 	}
@@ -130,21 +129,6 @@ void Boss::Laser::update() {
 		}
 		break;
 	}
-}
-
-bool Boss::Laser::onDeleting() {
-	if (b->comp[b->leftLaser] == this) {
-		b->comp[b->leftLaser] = nullptr;
-		b->onChiledDeleting(this);
-	} else if (b->comp[b->rightLaser] == this) {
-		b->onChiledDeleting(this);
-		b->comp[b->rightLaser] = nullptr;
-	}
-	if (laser) {
-		laser->toDelete = true;
-		laser->parent = nullptr;
-	}
-	return true;
 }
 
 Boss::LaserBeam::LaserBeam(std::shared_ptr<Game> game, const gm::Coord& pos, const gm::Vector& dir, Duration existTime) :
@@ -198,9 +182,6 @@ void Boss::LaserBeam::onCollideWithPlayer(const gm::Collision& coll) {
 	}
 }
 
-bool Boss::LaserBeam::onDeleting() {
-	if (parent) {
-		parent->laser = nullptr;
-	}
-	return true;
+void Boss::LaserBeam::onParrentDeleting() {
+	toDelete = true;
 }

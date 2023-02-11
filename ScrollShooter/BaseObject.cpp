@@ -57,5 +57,37 @@ void BaseObject::onCollideWithPlayer(const gm::Collision& col) {
 }
 
 bool BaseObject::onDeleting() {
+	for (auto it = children.begin(); it != children.end();) {
+		auto child = *it;
+		++it;
+		child->onParrentDeleting();
+		unadopt(child->inParent);
+	}
+	if (parent) {
+		parent->onChildDeleting(inParent);
+	}
 	return false;
 }
+
+BaseObject::Children::iterator BaseObject::adopt(BaseObject* child) {
+	if (child->parent) {
+		child->parent->unadopt(child->inParent);
+	}
+	child->parent = this;
+	children.push_back(child);
+	child->inParent = --children.end();
+	return --children.end();
+}
+
+void BaseObject::unadopt(Children::iterator chldPos) {
+	if ((*chldPos)->parent == this) {
+		(*chldPos)->parent = nullptr;
+		children.erase(chldPos);
+	}
+}
+
+void BaseObject::onChildDeleting(Children::iterator chldPos) {
+	unadopt(chldPos);
+}
+
+void BaseObject::onParrentDeleting() {}

@@ -8,7 +8,7 @@
 - Add snake-like boss
 - May be add paddings support for `MySpryte`
 - May be add `IBackTimer` for `BackTimer` and `Animations`
-- Add support for complex objects like bosses
+- ~~Add support for complex objects like bosses~~
 - May be add z-order layers support for `QuadTree`
 - ~~Add needUpdate callback for `QuadTree`~~
 - May be add `C#`-like `Event`

@@ -40,6 +40,7 @@ int Enemy::getScore() const {
 }
 
 bool Enemy::onDeleting() {
+	BaseObject::onDeleting();
 	dropBonus();
 	return false;
 }

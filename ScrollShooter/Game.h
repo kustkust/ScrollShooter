@@ -82,3 +82,9 @@ public:
 		return bonuses.pushBack(std::make_unique<T>(shared_from_this(), args...));
 	}
 };
+
+template<class T, class ...Args>
+inline BaseObject::Children::iterator BaseObject::born(Args ...args) {
+	auto it = game->pushBackObj<T, Args...>(std::forward<Args>(args)...);
+	return adopt(it);
+}

@@ -11,6 +11,11 @@ class BaseObject : public sf::Drawable {
 public:
 	Layers collisionLayers;
 
+	using Children = std::list<BaseObject*>;
+	BaseObject* parent = nullptr;
+	Children::iterator inParent;
+	Children children;
+
 	BaseObject() = default;
 	BaseObject(std::shared_ptr<Game> game, const std::string& anim, const gm::Coord& pos);
 	BaseObject& operator=(BaseObject&& obj) = default;
@@ -34,5 +39,13 @@ public:
 	bool collide(BaseObject* other);
 	virtual void onCollideWithPlayer(const gm::Collision& col);
 	virtual bool onDeleting();
+
+	Children::iterator adopt(BaseObject* child);
+	template<class T, class... Args>
+	BaseObject::Children::iterator born(Args... args);
+	void unadopt(Children::iterator chldPos);
+	virtual void onChildDeleting(Children::iterator chldPos);
+	virtual void onParrentDeleting();
+
 	virtual ~BaseObject() = default;
 };

@@ -184,11 +184,11 @@ void Game::update() {
 					auto col = enemy->hitbox->collides(player.shieldHitbox);
 					if (!col.getPoints().empty()) {
 						enemy->onCollideWithPlayer(col);
-						}
-
 					}
+
 				}
 			}
+		}
 
 		for (auto& enemy : enemys.collide(player.hitbox.get())) {
 			if ((enemy->collisionLayers & PlayerVsEnemys).any() && !enemy->toDelete && 
@@ -255,7 +255,7 @@ void Game::update() {
 		if (bossSpawnTimer.finish() && !bossSpawned) {
 			Boss::makeBoss(shared_from_this());
 			bossSpawned = true;
-		} else if (!spawnTimer.update()) {
+		} else if (false && !spawnTimer.update()) {
 			spawnTimer.restart(Duration(spawnDuratin(gen)));
 			auto x = spawnPoint(gen);
 			switch (enemyType(gen)) {
